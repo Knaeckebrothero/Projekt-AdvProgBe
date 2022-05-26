@@ -28,4 +28,12 @@ public class Business {
 	private List<String> categories;
 	private OpeningHours hours;
 	private List<LocalDateTime> checkins;
+	public Integer getStars() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public String getBusinessId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
