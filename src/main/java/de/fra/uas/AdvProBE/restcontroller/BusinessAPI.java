@@ -30,14 +30,14 @@ public class BusinessAPI {
 			return new ResponseEntity<HashMap<String, Integer>>(HttpStatus.NOT_FOUND);
 		}
 	}
-
+	
 	// Get큦 all the counts큦 of Businesses found in all Citys
 	@GetMapping
-	@RequestMapping("get/count")
+	@RequestMapping("get/countCity")
 	public ResponseEntity<HashMap<String, Integer>> GetBusinessofAllCitys() {
 		return new ResponseEntity<HashMap<String, Integer>>(bService.GetBusinessofAllCitys(), HttpStatus.OK);
 	}
-
+	
 	// Get큦 the average Rating for the given City
 	@GetMapping
 	@RequestMapping("get/rating/{city}")
@@ -49,4 +49,11 @@ public class BusinessAPI {
 			return new ResponseEntity<HashMap<String, Double>>(HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	// Get큦 the average Rating of all Citys
+		@GetMapping
+		@RequestMapping("get/ratingAvg")
+		public ResponseEntity<HashMap<String, Double>> GetRatingOfAllCity() {
+			return new ResponseEntity<HashMap<String, Double>>(bService.GetRatingOfAllCitys(), HttpStatus.OK);
+		}
 }

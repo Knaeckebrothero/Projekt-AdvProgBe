@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
 import de.fra.uas.AdvProBE.db.entitys.Business;
@@ -19,6 +21,7 @@ public class ReviewService {
 
 	private ReviewRepository repository;
 	private BusinessRepository bRepository;
+	private MongoTemplate mongoTemplate;
 
 	// Returns a Review by ID
 	public Review GetReview(String ReviewID) {
@@ -68,4 +71,11 @@ public class ReviewService {
 		};
 		return CityPlusReviewsCount;
 	}
+	
+	// Returns a map Cointaining the City names with the number of reviews
+		public List<String> Test() {
+			mongoTemplate.findAll(Review.class).projection();
+			System.out.println(repository.findAll().get(0));
+			return null;
+		}
 }

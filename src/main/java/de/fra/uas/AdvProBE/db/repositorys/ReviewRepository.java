@@ -13,8 +13,11 @@ public interface ReviewRepository extends MongoRepository<Review, String> {
 	// Finds and returns a Review in case it exists
 	public Optional<Review> findReviewById(String id);
 	public List<Review> findReviewByBusinessId(String id);
-	
-	//Custom Query´s
+
+	// Custom Query´s
 	@Query(value = "{'businessId': {$regex: ?0, $options: 'i'}}", count = true)
 	public Integer countFetchedDocumentsForRievwId(String id);
+
+	@Query("{text:0}")
+	List<Review> findAll();
 }

@@ -16,6 +16,15 @@ public class BusinessService {
 
 	private BusinessRepository repository;
 
+	private static double round(double value, int places) {
+		if (places < 0)
+			throw new IllegalArgumentException();
+		long factor = (long) Math.pow(10, places);
+		value = value * factor;
+		long tmp = Math.round(value);
+		return (double) tmp / factor;
+	}
+
 	// Returns a Business by ID
 	public Business GetBusiness(String Business) {
 		if (repository.findBusinessByName(Business).isPresent()) {
@@ -52,7 +61,8 @@ public class BusinessService {
 			} else {
 				CityPlusBusinessCount.put(c, 1);
 			}
-		};
+		}
+		;
 		return CityPlusBusinessCount;
 	}
 
@@ -71,5 +81,33 @@ public class BusinessService {
 		} else {
 			return null;
 		}
+	}
+
+	// Returns a map Cointaining the City names with the average stars its of
+	// Businesses
+	public HashMap<String, Double> GetRatingOfAllCitys() {
+		List<Business> Business = repository.findAll();
+		HashMap<String, Double> CityPlusBusinessRating = new HashMap<>();
+		HashMap<String, Integer> Counter = new HashMap<>();
+		Double d;
+		String c;
+
+		for (Business b : Business) {
+			c = b.getAddress().getCity();
+			if (CityPlusBusinessRating.containsKey(c) && b.getStars() != null) {
+				Counter.merge(c, 1, Integer::sum);
+				d = CityPlusBusinessRating.get(c) + b.getStars();
+				CityPlusBusinessRating.replace(c, d);
+			} else {
+				CityPlusBusinessRating.put(c, b.getStars().doubleValue());
+				Counter.put(c, 1);
+			}
+		}
+		;
+		for (String city : Counter.keySet()) {
+			d = round(CityPlusBusinessRating.get(city) / Counter.get(city), 2);
+			CityPlusBusinessRating.replace(city, d);
+		}
+		return CityPlusBusinessRating;
 	}
 }

@@ -19,7 +19,7 @@ public class Review {
 	private String reviewId;
 	private String userId;
 	private String businessId;
-	private int stars;
+	private Integer stars;
 	private Tags tags;
 	private String text;
 	private LocalDateTime date;

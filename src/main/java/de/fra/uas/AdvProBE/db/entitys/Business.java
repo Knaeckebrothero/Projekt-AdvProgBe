@@ -21,19 +21,11 @@ public class Business {
 	private String businessId;
 	private String name;
 	private BusinessAddress address;
-	private int stars;
-	private int reviewCount;
+	private Integer stars;
+	private Integer reviewCount;
 	private boolean isOpen;
 	private HashMap<String, String> attributes;
 	private List<String> categories;
 	private OpeningHours hours;
 	private List<LocalDateTime> checkins;
-	public Integer getStars() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	public String getBusinessId() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

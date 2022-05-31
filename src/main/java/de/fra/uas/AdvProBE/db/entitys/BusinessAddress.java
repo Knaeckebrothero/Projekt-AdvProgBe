@@ -8,6 +8,6 @@ public class BusinessAddress {
 	private String address;
 	private String city;
 	private String state;
-	private int postalCode;
+	private Integer postalCode;
 	private Coordinates coordinates;
 }
