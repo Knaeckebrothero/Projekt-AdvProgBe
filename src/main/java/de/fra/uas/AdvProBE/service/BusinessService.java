@@ -26,8 +26,8 @@ public class BusinessService {
 	}
 
 	// Returns a Business by ID
-	public Business GetBusiness(String Business) {
-		if (repository.findBusinessByName(Business).isPresent()) {
+	public HashMap<String, String> GetBusiness(String Name, String City) {
+		if (repository.findBusinessByName(Business).isPresent() && repository) {
 			return repository.findBusinessById(Business).get();
 		} else {
 			return null;

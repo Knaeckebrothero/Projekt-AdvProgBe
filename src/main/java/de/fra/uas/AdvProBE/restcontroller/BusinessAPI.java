@@ -19,6 +19,18 @@ public class BusinessAPI {
 
 	private BusinessService bService;
 
+	//Get´s a business with it´s information
+	@GetMapping
+	@RequestMapping("get/{city}/{name}")
+	public ResponseEntity<HashMap<String, String>> GetBusiness(@PathVariable String city, String name){
+		HashMap<String, String> business = bService.GetBusiness();
+		if(business != null) {
+			return new ResponseEntity<HashMap<String, String>>(business, HttpStatus.OK);
+		} else {
+		return new ResponseEntity<HashMap<String, String>>(HttpStatus.NOT_FOUND);	
+		}
+	}
+	
 	// Get´s the number of Businesses found in the given City
 	@GetMapping
 	@RequestMapping("get/total/{city}")

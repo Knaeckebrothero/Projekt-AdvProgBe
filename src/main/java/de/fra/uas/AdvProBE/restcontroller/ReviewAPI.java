@@ -1,7 +1,6 @@
 package de.fra.uas.AdvProBE.restcontroller;
 
 import java.util.HashMap;
-import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,11 +37,4 @@ public class ReviewAPI {
 	public ResponseEntity<HashMap<String, Integer>> GetReviewsofAllCitys() {
 		return new ResponseEntity<HashMap<String, Integer>>(rService.GetReviewsofAllCitys(), HttpStatus.OK);
 	}
-	
-	// Get´s all the counts´s of Reviews written for a Business in all Citys
-		@GetMapping
-		@RequestMapping("get/Test")
-		public ResponseEntity<List<String>> Test() {
-			return new ResponseEntity<List<String>>(rService.Test(), HttpStatus.OK);
-		}
 }
