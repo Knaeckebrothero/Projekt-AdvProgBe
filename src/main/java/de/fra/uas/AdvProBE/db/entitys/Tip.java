@@ -20,5 +20,5 @@ public class Tip {
 	private String businessId;
 	private String text;
 	private LocalDateTime date;
-	private int complimentCount;
+	private Integer complimentCount;
 }

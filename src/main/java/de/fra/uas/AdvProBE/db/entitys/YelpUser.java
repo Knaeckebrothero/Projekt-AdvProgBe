@@ -20,12 +20,12 @@ public class YelpUser {
 	// Values contained by the Yelp data set
 	private String userId;
 	private String name;
-	private int reviewCount;
+	private Integer reviewCount;
 	private LocalDateTime yelpingSince;
 	private Tags tags;
 	private List<Integer> elite;
 	private List<String> friends;
-	private int fans;
+	private Integer fans;
 	private double averageStars;
 	private UserCompliment compliments;
 }

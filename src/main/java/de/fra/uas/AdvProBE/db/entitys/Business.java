@@ -21,8 +21,8 @@ public class Business {
 	private String businessId;
 	private String name;
 	private BusinessAddress address;
-	private int stars;
-	private int reviewCount;
+	private Integer stars;
+	private Integer reviewCount;
 	private boolean isOpen;
 	private HashMap<String, String> attributes;
 	private List<String> categories;
