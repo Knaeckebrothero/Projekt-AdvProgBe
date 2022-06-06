@@ -1,9 +1,14 @@
 package de.fra.uas.AdvProBE.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import de.fra.uas.AdvProBE.db.entitys.Business;
@@ -19,6 +24,7 @@ public class ReviewService {
 
 	private ReviewRepository repository;
 	private BusinessRepository bRepository;
+	private MongoTemplate template;
 
 	// Returns a Review by ID
 	public Review GetReview(String ReviewID) {
@@ -31,6 +37,10 @@ public class ReviewService {
 
 	// Returns the number of Reviews written for a Business of the given City
 	public HashMap<String, Integer> GetReviewsPerCity(String city) {
+
+		Query query = new Query();
+		query.fields().exclude("text");
+
 		List<Business> BusinessOfCity = bRepository.findByCity(city);
 		Integer reviews = 0;
 		for (Business b : BusinessOfCity) {
@@ -52,7 +62,7 @@ public class ReviewService {
 		LinkedList<Business> Business = new LinkedList<>();
 		Business.addAll(bRepository.findAll());
 		HashMap<String, Integer> CityPlusReviewsCount = new HashMap<>();
-		//int rCount = Reviews.size();
+		// int rCount = Reviews.size();
 		int rCount = 3;
 		Integer i;
 		String c;
@@ -65,7 +75,24 @@ public class ReviewService {
 			} else {
 				CityPlusReviewsCount.put(c, repository.countFetchedDocumentsForRievwId(Business.get(count).getId()));
 			}
-		};
+		}
+		;
 		return CityPlusReviewsCount;
+	}
+
+	// Returns a sorted list with dates representing the date at which a review was
+	// written
+	public List<LocalDateTime> GetReviewsTimeline() {
+		Query query = new Query();
+		query.fields().include("date").exclude("_id");
+		// query.with(Sort.by(Sort.Direction.ASC, "date"));
+		List<Review> list = template.find(query, Review.class);
+		ArrayList<LocalDateTime> listDate = new ArrayList<>();
+
+		for (Review r : list) {
+			listDate.add(r.getDate());
+		}
+		Collections.sort(listDate);
+		return listDate;
 	}
 }

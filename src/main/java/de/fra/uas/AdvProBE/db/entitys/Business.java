@@ -1,6 +1,7 @@
 package de.fra.uas.AdvProBE.db.entitys;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import lombok.Data;
 //Java object representing database document
 @Data
 @Document
-public class Business {
+public class Business implements Comparable<Business> {
 	// Auto generated id used by the Database
 	@Id
 	private String id;
@@ -28,4 +29,24 @@ public class Business {
 	private List<String> categories;
 	private OpeningHours hours;
 	private List<LocalDateTime> checkins;
+
+	public Integer getReviewCount() {
+		return reviewCount;
+	}
+
+	public int compareTo(Business compareBusiness) {
+		Integer compareStars = ((Business) compareBusiness).getReviewCount();
+		return this.reviewCount - compareStars;
+	}
+
+	public static Comparator<Business> BusinessReviewCountComparator = new Comparator<Business>() {
+		public int compare(Business a, Business b) {
+			Integer businessReviewCountA = a.getReviewCount();
+			Integer businessReviewCountB = b.getReviewCount();
+			// ascending order
+			return businessReviewCountB.compareTo(businessReviewCountA);
+		}
+
+	};
+
 }
