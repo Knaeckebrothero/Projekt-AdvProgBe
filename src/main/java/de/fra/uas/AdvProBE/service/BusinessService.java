@@ -1,7 +1,9 @@
 package de.fra.uas.AdvProBE.service;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -25,10 +27,11 @@ public class BusinessService {
 		return (double) tmp / factor;
 	}
 
-	// Returns a Business by ID
-	public HashMap<String, String> GetBusiness(String Name, String City) {
-		if (repository.findBusinessByName(Business).isPresent() && repository) {
-			return repository.findBusinessById(Business).get();
+	// Returns a Business by city and its name
+	public Business GetBusiness(String city, String name) {
+		Optional<Business> business = repository.findByCityAndName(city, name);
+		if (business.isPresent()) {
+			return business.get();
 		} else {
 			return null;
 		}
@@ -109,5 +112,70 @@ public class BusinessService {
 			CityPlusBusinessRating.replace(city, d);
 		}
 		return CityPlusBusinessRating;
+	}
+
+	// Returns a list holding the Top 10 Businesses of the given city
+	public List<Business> GetTopTenRestaurantPerCity(String name) {
+		List<Business> list = repository.findByCity(name);
+		list.sort(Business.BusinessReviewCountComparator);
+		if (list.size() > 10) {
+			list.subList(10, list.size()).clear();
+		}
+		for(Business b: list) {
+			b.setCheckins(null);
+		}
+		return list;
+	}
+
+	// Returns a list holding the Top 10 Businesses of the given state
+	public List<Business> GetTopTenRestaurantPerState(String name) {
+		List<Business> list = repository.findByState(name);
+		System.out.println(name);
+		System.out.println(list.size());
+		list.sort(Business.BusinessReviewCountComparator);
+		if (list.size() > 10) {
+			list.subList(10, list.size()).clear();
+		}
+		for(Business b: list) {
+			b.setCheckins(null);
+		}
+		return list;
+	}
+
+	// Returns a list holding the Top 10 Businesses total
+	public List<Business> GetTopTenRestaurants() {
+		List<Business> list = repository.findAll();
+		list.sort(Business.BusinessReviewCountComparator);
+		if (list.size() > 10) {
+			list.subList(10, list.size()).clear();
+		}
+		for(Business b: list) {
+			b.setCheckins(null);
+		}
+		return list;
+	}
+
+	// Returns a list holding the Top 10 Businesses of the given place
+	public List<Business> GetTopTenRestaurant(String designation, String name) {
+
+		switch (designation) {
+		case "city": {
+			return GetTopTenRestaurantPerCity(name);
+		}
+		case "state": {
+			return GetTopTenRestaurantPerState(name);
+		}
+		default:
+			return null;
+		}
+	}
+
+	public List<LocalDateTime> GetCheckins(String city, String name) {
+		Optional<Business> business = repository.findByCityAndName(city, name);
+		if(business.isPresent()) {
+			return business.get().getCheckins();
+		} else {
+			return null;
+		}
 	}
 }

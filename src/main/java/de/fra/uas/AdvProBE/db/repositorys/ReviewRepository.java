@@ -17,7 +17,4 @@ public interface ReviewRepository extends MongoRepository<Review, String> {
 	// Custom Query´s
 	@Query(value = "{'businessId': {$regex: ?0, $options: 'i'}}", count = true)
 	public Integer countFetchedDocumentsForRievwId(String id);
-
-	@Query("{text:0}")
-	List<Review> findAll();
 }
