@@ -1,8 +1,8 @@
 package de.fra.uas.AdvProBE.service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -122,7 +122,7 @@ public class BusinessService {
 		if (list.size() > 10) {
 			list.subList(10, list.size()).clear();
 		}
-		for(Business b: list) {
+		for (Business b : list) {
 			b.setCheckins(null);
 		}
 		return list;
@@ -137,7 +137,7 @@ public class BusinessService {
 		if (list.size() > 10) {
 			list.subList(10, list.size()).clear();
 		}
-		for(Business b: list) {
+		for (Business b : list) {
 			b.setCheckins(null);
 		}
 		return list;
@@ -150,7 +150,7 @@ public class BusinessService {
 		if (list.size() > 10) {
 			list.subList(10, list.size()).clear();
 		}
-		for(Business b: list) {
+		for (Business b : list) {
 			b.setCheckins(null);
 		}
 		return list;
@@ -171,25 +171,42 @@ public class BusinessService {
 		}
 	}
 
+	// Returns a list with all the checkins for a business in the given city
 	public List<LocalDateTime> GetCheckins(String city, String name) {
 		Optional<Business> business = repository.findByCityAndName(city, name);
-		if(business.isPresent()) {
+		if (business.isPresent()) {
 			return business.get().getCheckins();
 		} else {
 			return null;
 		}
 	}
 
+	// Returns a list with all the citynames
 	public List<String> GetAllCitys() {
-		LinkedList<Business> list = (LinkedList<Business>) repository.findAll();
-		List<String> city = List.of(list.get(0).getAddress().getCity());
-		list.remove(0);
+		List<Business> list = repository.findAll();
+		List<String> city = Arrays.asList(list.get(0).getAddress().getCity(), list.get(1).getAddress().getCity());
+		String s = null;
 		
-		for(Business b : list) {
-		if(city.contains(b.getAddress().getCity())) {
-			
+		System.out.println(city);
+		System.out.println(list.size());
+		System.out.println(city.size());
+
+		for (Business b : list) {
+			System.out.println(b.getAddress().getCity());
+			s = b.getAddress().getCity();
+			System.out.println(city.contains(s));
+			if (city.contains(s)) {
+			} else {
+				//System.out.println("davor "+s);
+				city.add(s);
+				//System.out.println("schleifeIf");
+			}
 		}
-		}
-		return null;
+		System.out.println(city);
+		return city;
+	}
+
+	public List<Business> getAllBusinesses() {
+		return repository.findAll();
 	}
 }

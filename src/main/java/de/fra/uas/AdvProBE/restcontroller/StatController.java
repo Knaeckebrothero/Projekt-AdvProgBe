@@ -43,7 +43,6 @@ public class StatController {
 
 	// Get�s the number of Businesses found in the given City
 	@GetMapping
-
 	@RequestMapping("business/totalStats/{city}")
 	public ResponseEntity<HashMap<String, Integer>> GetBusinessPerCity(@PathVariable String city) {
 		HashMap<String, Integer> map = bService.GetBusinessesPerCity(city);
