@@ -40,7 +40,7 @@ public class StatController {
 			return new ResponseEntity<Business>(HttpStatus.NOT_FOUND);
 		}
 	}
-
+	
 	// Get´s the number of Businesses found in the given City
 	@GetMapping
 	@RequestMapping("business/totalStats/{city}")
