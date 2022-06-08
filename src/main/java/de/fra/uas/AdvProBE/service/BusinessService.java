@@ -2,6 +2,7 @@ package de.fra.uas.AdvProBE.service;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -177,5 +178,18 @@ public class BusinessService {
 		} else {
 			return null;
 		}
+	}
+
+	public List<String> GetAllCitys() {
+		LinkedList<Business> list = (LinkedList<Business>) repository.findAll();
+		List<String> city = List.of(list.get(0).getAddress().getCity());
+		list.remove(0);
+		
+		for(Business b : list) {
+		if(city.contains(b.getAddress().getCity())) {
+			
+		}
+		}
+		return null;
 	}
 }
