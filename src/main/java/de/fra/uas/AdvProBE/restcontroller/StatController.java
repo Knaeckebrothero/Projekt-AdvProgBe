@@ -27,7 +27,7 @@ public class StatController {
 
 	// Get´s a business with it´s information
 	@GetMapping
-	@RequestMapping("business/{city}/{name}")
+	@RequestMapping("business/custom/{city}/{name}")
 	public ResponseEntity<Business> GetBusiness(@PathVariable String city, @PathVariable String name) {
 		Business business = bService.GetBusiness(city, name);
 		if (business != null) {
@@ -43,7 +43,7 @@ public class StatController {
 
 	// Get´s the number of Businesses found in the given City
 	@GetMapping
-	@RequestMapping("busines/total/{city}")
+	@RequestMapping("business/totalStats/{city}")
 	public ResponseEntity<HashMap<String, Integer>> GetBusinessPerCity(@PathVariable String city) {
 		HashMap<String, Integer> map = bService.GetBusinessesPerCity(city);
 		if (map != null) {
