@@ -25,7 +25,7 @@ public class StatController {
 	private BusinessService bService;
 	private ReviewService rService;
 
-	// Get´s a business with it´s information
+	// Getï¿½s a business with itï¿½s information
 	@GetMapping
 	@RequestMapping("business/{city}/{name}")
 	public ResponseEntity<Business> GetBusiness(@PathVariable String city, @PathVariable String name) {
@@ -41,9 +41,9 @@ public class StatController {
 		}
 	}
 
-	// Get´s the number of Businesses found in the given City
+	// Getï¿½s the number of Businesses found in the given City
 	@GetMapping
-	@RequestMapping("busines/total/{city}")
+	@RequestMapping("business/total/{city}")
 	public ResponseEntity<HashMap<String, Integer>> GetBusinessPerCity(@PathVariable String city) {
 		HashMap<String, Integer> map = bService.GetBusinessesPerCity(city);
 		if (map != null) {
@@ -53,14 +53,14 @@ public class StatController {
 		}
 	}
 
-	// Get´s all the counts´s of Businesses found in all Citys
+	// Getï¿½s all the countsï¿½s of Businesses found in all Citys
 	@GetMapping
-	@RequestMapping("busines/countCity")
+	@RequestMapping("business/countCity")
 	public ResponseEntity<HashMap<String, Integer>> GetBusinessofAllCitys() {
 		return new ResponseEntity<HashMap<String, Integer>>(bService.GetBusinessofAllCitys(), HttpStatus.OK);
 	}
 
-	// Get´s the average Rating for the given City
+	// Getï¿½s the average Rating for the given City
 	@GetMapping
 	@RequestMapping("city/rating/average/{city}")
 	public ResponseEntity<HashMap<String, Double>> GetRatingOfCity(@PathVariable String city) {
@@ -72,14 +72,14 @@ public class StatController {
 		}
 	}
 
-	// Get´s the average Rating of all Citys
+	// Getï¿½s the average Rating of all Citys
 	@GetMapping
 	@RequestMapping("city/all/rating/average")
 	public ResponseEntity<HashMap<String, Double>> GetRatingOfAllCity() {
 		return new ResponseEntity<HashMap<String, Double>>(bService.GetRatingOfAllCitys(), HttpStatus.OK);
 	}
 
-	// Get´s the number of Reviews written for a Business in the given City
+	// Getï¿½s the number of Reviews written for a Business in the given City
 	@GetMapping
 	@RequestMapping("reviews/city/{city}")
 	public ResponseEntity<HashMap<String, Integer>> GetReviewsPerCity(@PathVariable String city) {
@@ -91,21 +91,21 @@ public class StatController {
 		}
 	}
 
-	// Get´s all the counts´s of Reviews written for a Business in all Citys
+	// Getï¿½s all the countsï¿½s of Reviews written for a Business in all Citys
 	@GetMapping
 	@RequestMapping("review/all/city/count")
 	public ResponseEntity<HashMap<String, Integer>> GetReviewsofAllCitys() {
 		return new ResponseEntity<HashMap<String, Integer>>(rService.GetReviewsofAllCitys(), HttpStatus.OK);
 	}
 
-	// Get´s all the Reviews in a timespan
+	// Getï¿½s all the Reviews in a timespan
 	@GetMapping
 	@RequestMapping("reviews/timespan")
 	public ResponseEntity<List<LocalDateTime>> GetReviewsTimeline() {
 		return new ResponseEntity<List<LocalDateTime>>(rService.GetReviewsTimeline(), HttpStatus.OK);
 	}
 
-	// Get´s all the Reviews in a timespan
+	// Getï¿½s all the Reviews in a timespan
 	@GetMapping
 	@RequestMapping("business/top/ten/{designation}/{name}")
 	public ResponseEntity<List<Business>> GetTopRestaurant(@PathVariable String designation,
@@ -118,7 +118,7 @@ public class StatController {
 		}
 	}
 
-	// Get´s all the Reviews in a timespan
+	// Getï¿½s all the Reviews in a timespan
 	@GetMapping
 	@RequestMapping("business/top/ten/total")
 	public ResponseEntity<List<Business>> GetTopRestaurantTotal() {
@@ -130,7 +130,7 @@ public class StatController {
 		}
 	}
 
-	// Get´s all the checkins of a Business
+	// Getï¿½s all the checkins of a Business
 	@GetMapping
 	@RequestMapping("business/checkins/{city}/{name}")
 	public ResponseEntity<List<LocalDateTime>> GetCheckins(@PathVariable String city, @PathVariable String name) {
