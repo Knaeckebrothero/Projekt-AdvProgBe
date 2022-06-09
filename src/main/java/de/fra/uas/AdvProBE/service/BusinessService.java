@@ -1,7 +1,7 @@
 package de.fra.uas.AdvProBE.service;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -184,7 +184,8 @@ public class BusinessService {
 	// Returns a list with all the citynames
 	public List<String> GetAllCitys() {
 		List<Business> list = repository.findAll();
-		List<String> city = Arrays.asList(list.get(0).getAddress().getCity(), list.get(1).getAddress().getCity());
+		ArrayList<String> city = new ArrayList<>();
+		//List<String> city = Arrays.asList(list.get(0).getAddress().getCity(), list.get(1).getAddress().getCity());
 		String s = null;
 		
 		System.out.println(city);
@@ -207,6 +208,10 @@ public class BusinessService {
 	}
 
 	public List<Business> getAllBusinesses() {
-		return repository.findAll();
+		
+		List<Business> list = repository.findAll();
+		list.subList(50, list.size()).clear();
+		return list;
+		//return repository.findAll();
 	}
 }

@@ -21,7 +21,7 @@ public class MapController {
 
 	private BusinessService bService;
 
-	// Get All Businesses
+	// Get All Businesses (Only for development purposes)
 	@GetMapping("Preview")
 	public ResponseEntity<List<Business>> getAllBusinesses() {
 		return new ResponseEntity<List<Business>>(bService.getAllBusinesses(), HttpStatus.OK);
