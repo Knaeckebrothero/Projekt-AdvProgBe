@@ -11,16 +11,19 @@ import lombok.Data;
 @Data
 @Document
 public class Review {
-	// Auto generated id used by the Database
+	//Auto generated id used by the Database
 	@Id
 	private String id;
-
 	// Values contained by the Yelp data set
 	private String reviewId;
 	private String userId;
 	private String businessId;
 	private Integer stars;
-	private Tags tags;
+	// Summary of useful, funny, cool
+	private Integer useful;
+	private Integer funny;
+	private Integer cool;
 	private String text;
 	private LocalDateTime date;
+
 }
