@@ -27,7 +27,7 @@ public class ReviewService {
 	private MongoTemplate template;
 
 	// Returns a Review by ID
-	public Review GetReview(String ReviewID) {
+	public Review getReview(String ReviewID) {
 		if (repository.findReviewById(ReviewID).isPresent()) {
 			return repository.findReviewById(ReviewID).get();
 		} else {
@@ -36,7 +36,7 @@ public class ReviewService {
 	}
 
 	// Returns the number of Reviews written for a Business of the given City
-	public HashMap<String, Integer> GetReviewsPerCity(String city) {
+	public HashMap<String, Integer> getReviewsPerCity(String city) {
 
 		Query query = new Query();
 		query.fields().exclude("text");
@@ -56,7 +56,7 @@ public class ReviewService {
 	}
 
 	// Returns a map Cointaining the City names with the number of reviews
-	public HashMap<String, Integer> GetReviewsofAllCitys() {
+	public HashMap<String, Integer> getReviewsofAllCitys() {
 		LinkedList<Review> Reviews = new LinkedList<>();
 		Reviews.addAll(repository.findAll());
 		LinkedList<Business> Business = new LinkedList<>();
@@ -68,7 +68,7 @@ public class ReviewService {
 		String c;
 
 		for (int count = 0; count > rCount; count++) {
-			c = Business.get(count).getAddress().getCity();
+			c = Business.get(count).getCity();
 			if (CityPlusReviewsCount.containsKey(c)) {
 				i = repository.countFetchedDocumentsForRievwId(Business.get(count).getId());
 				CityPlusReviewsCount.replace(c, i);
@@ -82,7 +82,7 @@ public class ReviewService {
 
 	// Returns a sorted list with dates representing the date at which a review was
 	// written
-	public List<LocalDateTime> GetReviewsTimeline() {
+	public List<LocalDateTime> getReviewsTimeline() {
 		Query query = new Query();
 		query.fields().include("date").exclude("_id");
 		// query.with(Sort.by(Sort.Direction.ASC, "date"));

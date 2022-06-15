@@ -30,12 +30,12 @@ public class MapController {
 	// Get´s a list with all the citynames
 	@GetMapping("citys")
 	public ResponseEntity<List<String>> getAllCitys() {
-		return new ResponseEntity<List<String>>(bService.GetAllCitys(), HttpStatus.OK);
+		return new ResponseEntity<List<String>>(bService.getAllCitys(), HttpStatus.OK);
 	}
 
 	// Get´s a list with all the businesses for a city
 	@GetMapping("{city}/{name}")
 	public ResponseEntity<List<String>> getAllBusinessesForCity(@PathVariable String city, @PathVariable String name) {
-		return new ResponseEntity<List<String>>(bService.GetAllCitys(), HttpStatus.OK);
+		return new ResponseEntity<List<String>>(bService.getAllCitys(), HttpStatus.OK);
 	}
 }

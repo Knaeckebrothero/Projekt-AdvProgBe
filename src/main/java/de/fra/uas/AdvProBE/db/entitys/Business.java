@@ -2,7 +2,6 @@ package de.fra.uas.AdvProBE.db.entitys;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -13,23 +12,37 @@ import lombok.Data;
 //Java object representing database document
 @Data
 @Document
-public class Business implements Comparable<Business> {
+public class Business {
 	// Auto generated id used by the Database
 	@Id
 	private String id;
-
 	// Values contained by the Yelp data set
 	private String businessId;
 	private String name;
-	private BusinessAddress address;
+	// Address Data
+	private String address;
+	private String city;
+	private String state;
+	private Integer postalCode;
+	// Coordinates
+	private double latitude;
+	private double longitude;
+	// Infos
 	private Integer stars;
 	private Integer reviewCount;
 	private boolean isOpen;
-	private HashMap<String, String> attributes;
 	private List<String> categories;
-	private OpeningHours hours;
+	//Opening Hours
+	private String Monday;
+	private String Tuesday;
+	private String Wednesday;
+	private String Thursday;
+	private String Friday;
+	private String Saturday;
+	private String Sunday;
+	//Checkins
 	private List<LocalDateTime> checkins;
-
+	
 	public Integer getReviewCount() {
 		return reviewCount;
 	}
@@ -48,5 +61,4 @@ public class Business implements Comparable<Business> {
 		}
 
 	};
-
 }

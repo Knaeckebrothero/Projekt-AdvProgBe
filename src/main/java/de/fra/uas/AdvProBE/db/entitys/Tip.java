@@ -11,14 +11,13 @@ import lombok.Data;
 @Data
 @Document
 public class Tip {
-	// Auto generated id used by the Database
+	//Auto generated id used by the Database
 	@Id
 	private String id;
-
 	// Values contained by the Yelp data set
 	private String userId;
 	private String businessId;
 	private String text;
 	private LocalDateTime date;
-	private Integer complimentCount;
+	private int complimentCount;
 }

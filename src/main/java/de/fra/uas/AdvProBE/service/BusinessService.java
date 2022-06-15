@@ -1,11 +1,13 @@
 package de.fra.uas.AdvProBE.service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import de.fra.uas.AdvProBE.db.entitys.Business;
@@ -18,6 +20,7 @@ import lombok.AllArgsConstructor;
 public class BusinessService {
 
 	private BusinessRepository repository;
+	private MongoTemplate template;
 
 	private static double round(double value, int places) {
 		if (places < 0)
@@ -29,7 +32,7 @@ public class BusinessService {
 	}
 
 	// Returns a Business by city and its name
-	public Business GetBusiness(String city, String name) {
+	public Business getBusiness(String city, String name) {
 		Optional<Business> business = repository.findByCityAndName(city, name);
 		if (business.isPresent()) {
 			return business.get();
@@ -39,7 +42,7 @@ public class BusinessService {
 	}
 
 	// Returns the number of Businesses in a City
-	public HashMap<String, Integer> GetBusinessesPerCity(String city) {
+	public HashMap<String, Integer> getBusinessesPerCity(String city) {
 		List<Business> BusinessOfCity = repository.findByCity(city);
 		if (BusinessOfCity != null) {
 			HashMap<String, Integer> map = new HashMap<>();
@@ -51,16 +54,16 @@ public class BusinessService {
 	}
 
 	// Returns a map Cointaining the City names with the number of Businesses
-	public HashMap<String, Integer> GetBusinessofAllCitys() {
+	public HashMap<String, Integer> getBusinessofAllCitys() {
 		List<Business> Business = repository.findAll();
 		HashMap<String, Integer> CityPlusBusinessCount = new HashMap<>();
 		Integer i;
 		String c;
 
 		for (Business b : Business) {
-			c = b.getAddress().getCity();
+			c = b.getCity();
 			if (CityPlusBusinessCount.containsKey(c)) {
-				i = CityPlusBusinessCount.get(b.getAddress().getCity()) + 1;
+				i = CityPlusBusinessCount.get(b.getCity()) + 1;
 				CityPlusBusinessCount.replace(c, i);
 			} else {
 				CityPlusBusinessCount.put(c, 1);
@@ -71,7 +74,7 @@ public class BusinessService {
 	}
 
 	// Returns the average Rating for the given City
-	public HashMap<String, Double> GetRatingOfCity(String city) {
+	public HashMap<String, Double> getRatingOfCity(String city) {
 		List<Business> BusinessOfCity = repository.findByCity(city);
 		Integer rating = 0;
 
@@ -89,7 +92,7 @@ public class BusinessService {
 
 	// Returns a map Cointaining the City names with the average stars its of
 	// Businesses
-	public HashMap<String, Double> GetRatingOfAllCitys() {
+	public HashMap<String, Double> getRatingOfAllCitys() {
 		List<Business> Business = repository.findAll();
 		HashMap<String, Double> CityPlusBusinessRating = new HashMap<>();
 		HashMap<String, Integer> Counter = new HashMap<>();
@@ -97,7 +100,7 @@ public class BusinessService {
 		String c;
 
 		for (Business b : Business) {
-			c = b.getAddress().getCity();
+			c = b.getCity();
 			if (CityPlusBusinessRating.containsKey(c) && b.getStars() != null) {
 				Counter.merge(c, 1, Integer::sum);
 				d = CityPlusBusinessRating.get(c) + b.getStars();
@@ -116,7 +119,7 @@ public class BusinessService {
 	}
 
 	// Returns a list holding the Top 10 Businesses of the given city
-	public List<Business> GetTopTenRestaurantPerCity(String name) {
+	public List<Business> getTopTenRestaurantPerCity(String name) {
 		List<Business> list = repository.findByCity(name);
 		list.sort(Business.BusinessReviewCountComparator);
 		if (list.size() > 10) {
@@ -129,7 +132,7 @@ public class BusinessService {
 	}
 
 	// Returns a list holding the Top 10 Businesses of the given state
-	public List<Business> GetTopTenRestaurantPerState(String name) {
+	public List<Business> getTopTenRestaurantPerState(String name) {
 		List<Business> list = repository.findByState(name);
 		System.out.println(name);
 		System.out.println(list.size());
@@ -144,7 +147,7 @@ public class BusinessService {
 	}
 
 	// Returns a list holding the Top 10 Businesses total
-	public List<Business> GetTopTenRestaurants() {
+	public List<Business> getTopTenRestaurants() {
 		List<Business> list = repository.findAll();
 		list.sort(Business.BusinessReviewCountComparator);
 		if (list.size() > 10) {
@@ -157,14 +160,14 @@ public class BusinessService {
 	}
 
 	// Returns a list holding the Top 10 Businesses of the given place
-	public List<Business> GetTopTenRestaurant(String designation, String name) {
+	public List<Business> getTopTenRestaurant(String designation, String name) {
 
 		switch (designation) {
 		case "city": {
-			return GetTopTenRestaurantPerCity(name);
+			return getTopTenRestaurantPerCity(name);
 		}
 		case "state": {
-			return GetTopTenRestaurantPerState(name);
+			return getTopTenRestaurantPerState(name);
 		}
 		default:
 			return null;
@@ -172,7 +175,7 @@ public class BusinessService {
 	}
 
 	// Returns a list with all the checkins for a business in the given city
-	public List<LocalDateTime> GetCheckins(String city, String name) {
+	public List<LocalDateTime> getCheckins(String city, String name) {
 		Optional<Business> business = repository.findByCityAndName(city, name);
 		if (business.isPresent()) {
 			return business.get().getCheckins();
@@ -182,19 +185,21 @@ public class BusinessService {
 	}
 
 	// Returns a list with all the citynames
-	public List<String> GetAllCitys() {
+	public List<String> getAllCitys() {
 		List<Business> list = repository.findAll();
-		ArrayList<String> city = new ArrayList<>();
-		//List<String> city = Arrays.asList(list.get(0).getAddress().getCity(), list.get(1).getAddress().getCity());
+		Query query = new Query();
+		List<String> city = Arrays.asList(list.get(0).getCity(), list.get(1).getCity());
 		String s = null;
+		
+		query.fields().include("address").exclude("_id");
 		
 		System.out.println(city);
 		System.out.println(list.size());
 		System.out.println(city.size());
 
 		for (Business b : list) {
-			System.out.println(b.getAddress().getCity());
-			s = b.getAddress().getCity();
+			System.out.println(b.getCity());
+			s = b.getCity();
 			System.out.println(city.contains(s));
 			if (city.contains(s)) {
 			} else {
