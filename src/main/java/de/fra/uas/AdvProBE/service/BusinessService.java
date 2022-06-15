@@ -1,6 +1,7 @@
 package de.fra.uas.AdvProBE.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +31,7 @@ public class BusinessService {
 		long tmp = Math.round(value);
 		return (double) tmp / factor;
 	}
-
+	
 	// Returns a Business by city and its name
 	public Business getBusiness(String city, String name) {
 		Optional<Business> business = repository.findByCityAndName(city, name);
@@ -42,31 +43,30 @@ public class BusinessService {
 	}
 
 	// Returns the number of Businesses in a City
-	public HashMap<String, Integer> getBusinessesPerCity(String city) {
-		List<Business> BusinessOfCity = repository.findByCity(city);
-		if (BusinessOfCity != null) {
-			HashMap<String, Integer> map = new HashMap<>();
-			map.put(city, BusinessOfCity.size());
-			return map;
-		} else {
-			return null;
-		}
+	public Integer getBusinessesPerCity(String city) {
+			return repository.countFetchedDocumentsForBusinessCity(city);
 	}
 
 	// Returns a map Cointaining the City names with the number of Businesses
-	public HashMap<String, Integer> getBusinessofAllCitys() {
-		List<Business> Business = repository.findAll();
-		HashMap<String, Integer> CityPlusBusinessCount = new HashMap<>();
-		Integer i;
+	public List<String> getBusinessofAllCitys() {
+		Query query = new Query();
+		query.fields().include();
+		List<Business> Business = template.find(query, Business.class);
+		
+		ArrayList<String> CityPlusBusinessCount = new ArrayList<>();
+		Integer i = 0;
+		Integer count;
 		String c;
 
 		for (Business b : Business) {
 			c = b.getCity();
-			if (CityPlusBusinessCount.containsKey(c)) {
-				i = CityPlusBusinessCount.get(b.getCity()) + 1;
-				CityPlusBusinessCount.replace(c, i);
+			if (CityPlusBusinessCount.contains(c)) {
+				i = CityPlusBusinessCount.indexOf(c)+1;
+				count = Integer.parseInt(CityPlusBusinessCount.get(CityPlusBusinessCount.indexOf(c)+1)) + 1;
+				CityPlusBusinessCount.set(i, count.toString());
 			} else {
-				CityPlusBusinessCount.put(c, 1);
+				CityPlusBusinessCount.add(c);
+				CityPlusBusinessCount.add("1");
 			}
 		}
 		;
@@ -186,37 +186,28 @@ public class BusinessService {
 
 	// Returns a list with all the citynames
 	public List<String> getAllCitys() {
-		List<Business> list = repository.findAll();
 		Query query = new Query();
-		List<String> city = Arrays.asList(list.get(0).getCity(), list.get(1).getCity());
-		String s = null;
-		
-		query.fields().include("address").exclude("_id");
-		
-		System.out.println(city);
-		System.out.println(list.size());
-		System.out.println(city.size());
+		query.fields().include("city").exclude("_id");
 
-		for (Business b : list) {
-			System.out.println(b.getCity());
-			s = b.getCity();
-			System.out.println(city.contains(s));
-			if (city.contains(s)) {
-			} else {
-				//System.out.println("davor "+s);
-				city.add(s);
-				//System.out.println("schleifeIf");
+		List<Business> list = template.find(query, Business.class);
+		List<String> city = Arrays.asList(list.get(0).getCity(), list.get(1).getCity());
+		String s = "Santa Barbara";
+		
+			for (Business b : list) {
+				s = b.getCity();
+				
+				if (!(city.contains(s) || s == null)) {
+					city.add(s);
+				}
 			}
-		}
-		System.out.println(city);
 		return city;
 	}
 
 	public List<Business> getAllBusinesses() {
-		
+
 		List<Business> list = repository.findAll();
 		list.subList(50, list.size()).clear();
 		return list;
-		//return repository.findAll();
+		// return repository.findAll();
 	}
 }

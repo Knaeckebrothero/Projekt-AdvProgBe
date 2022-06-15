@@ -25,23 +25,13 @@ public class StatController {
 	private BusinessService bService;
 	private ReviewService rService;
 
-<<<<<<< Updated upstream
-	// Getï¿½s a business with itï¿½s information
-	@GetMapping
-	@RequestMapping("business/custom/{city}/{name}")
-	public ResponseEntity<Business> GetBusiness(@PathVariable String city, @PathVariable String name) {
-		Business business = bService.GetBusiness(city, name);
-=======
 	// Get´s a business with it´s information
 	@GetMapping("business/custom/{city}/{name}")
 	public ResponseEntity<Business> getBusiness(@PathVariable String city, @PathVariable String name) {
 		Business business = bService.getBusiness(city, name);
->>>>>>> Stashed changes
+
 		if (business != null) {
-			business.setCheckins(null);
-			business.setId(null);
-			business.setBusinessId(null);
-			return new ResponseEntity<Business>(business, HttpStatus.OK);
+			return new ResponseEntity<Business>((business.nullNonInfo()), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<Business>(HttpStatus.NOT_FOUND);
 		}
@@ -50,26 +40,20 @@ public class StatController {
 	// Getï¿½s the number of Businesses found in the given City
 	@GetMapping
 	@RequestMapping("business/totalStats/{city}")
-	public ResponseEntity<HashMap<String, Integer>> getBusinessPerCity(@PathVariable String city) {
-		HashMap<String, Integer> map = bService.getBusinessesPerCity(city);
-		if (map != null) {
-			return new ResponseEntity<HashMap<String, Integer>>(map, HttpStatus.OK);
+	public ResponseEntity<Integer> getBusinessPerCity(@PathVariable String city) {
+		Integer i = bService.getBusinessesPerCity(city);
+		if (i != null) {
+			return new ResponseEntity<Integer>(i, HttpStatus.OK);
 		} else {
-			return new ResponseEntity<HashMap<String, Integer>>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Integer>(HttpStatus.NOT_FOUND);
 		}
 	}
 
 	// Getï¿½s all the countsï¿½s of Businesses found in all Citys
 	@GetMapping
-<<<<<<< Updated upstream
-	@RequestMapping("business/countCity")
-	public ResponseEntity<HashMap<String, Integer>> GetBusinessofAllCitys() {
-		return new ResponseEntity<HashMap<String, Integer>>(bService.GetBusinessofAllCitys(), HttpStatus.OK);
-=======
 	@RequestMapping("busines/countCity")
-	public ResponseEntity<HashMap<String, Integer>> getBusinessofAllCitys() {
-		return new ResponseEntity<HashMap<String, Integer>>(bService.getBusinessofAllCitys(), HttpStatus.OK);
->>>>>>> Stashed changes
+	public ResponseEntity<List<String>> getBusinessofAllCitys() {
+		return new ResponseEntity<List<String>>(bService.getBusinessofAllCitys(), HttpStatus.OK);
 	}
 
 	// Getï¿½s the average Rating for the given City

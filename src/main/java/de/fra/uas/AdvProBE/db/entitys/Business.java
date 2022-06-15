@@ -46,6 +46,13 @@ public class Business {
 	public Integer getReviewCount() {
 		return reviewCount;
 	}
+	
+	public Business nullNonInfo () {
+		this.id = null;
+		this.businessId = null;
+		this.checkins = null;
+		return this;
+	}
 
 	public int compareTo(Business compareBusiness) {
 		Integer compareStars = ((Business) compareBusiness).getReviewCount();
