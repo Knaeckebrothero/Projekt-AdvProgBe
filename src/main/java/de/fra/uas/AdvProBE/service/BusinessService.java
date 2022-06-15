@@ -2,12 +2,12 @@ package de.fra.uas.AdvProBE.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +31,7 @@ public class BusinessService {
 		long tmp = Math.round(value);
 		return (double) tmp / factor;
 	}
-	
+
 	// Returns a Business by city and its name
 	public Business getBusiness(String city, String name) {
 		Optional<Business> business = repository.findByCityAndName(city, name);
@@ -44,7 +44,7 @@ public class BusinessService {
 
 	// Returns the number of Businesses in a City
 	public Integer getBusinessesPerCity(String city) {
-			return repository.countFetchedDocumentsForBusinessCity(city);
+		return repository.countFetchedDocumentsForBusinessCity(city);
 	}
 
 	// Returns a map Cointaining the City names with the number of Businesses
@@ -52,7 +52,7 @@ public class BusinessService {
 		Query query = new Query();
 		query.fields().include();
 		List<Business> Business = template.find(query, Business.class);
-		
+
 		ArrayList<String> CityPlusBusinessCount = new ArrayList<>();
 		Integer i = 0;
 		Integer count;
@@ -61,8 +61,8 @@ public class BusinessService {
 		for (Business b : Business) {
 			c = b.getCity();
 			if (CityPlusBusinessCount.contains(c)) {
-				i = CityPlusBusinessCount.indexOf(c)+1;
-				count = Integer.parseInt(CityPlusBusinessCount.get(CityPlusBusinessCount.indexOf(c)+1)) + 1;
+				i = CityPlusBusinessCount.indexOf(c) + 1;
+				count = Integer.parseInt(CityPlusBusinessCount.get(CityPlusBusinessCount.indexOf(c) + 1)) + 1;
 				CityPlusBusinessCount.set(i, count.toString());
 			} else {
 				CityPlusBusinessCount.add(c);
@@ -74,17 +74,18 @@ public class BusinessService {
 	}
 
 	// Returns the average Rating for the given City
-	public HashMap<String, Double> getRatingOfCity(String city) {
-		List<Business> BusinessOfCity = repository.findByCity(city);
+	public Double getRatingOfCity(String city) {
+		Query query = new Query();
+		query.fields().include("stars").exclude("_id");
+		query.addCriteria(Criteria.where("city").is(city));
+		List<Business> BusinessOfCity = template.find(query, Business.class);
 		Integer rating = 0;
 
 		for (Business b : BusinessOfCity) {
 			rating += b.getStars();
 		}
 		if (BusinessOfCity != null && BusinessOfCity.size() != 0) {
-			HashMap<String, Double> map = new HashMap<>();
-			map.put(city, Double.valueOf(rating / BusinessOfCity.size()));
-			return map;
+			return round(Double.valueOf(Double.valueOf(rating) / BusinessOfCity.size()), 2);
 		} else {
 			return null;
 		}
@@ -92,7 +93,7 @@ public class BusinessService {
 
 	// Returns a map Cointaining the City names with the average stars its of
 	// Businesses
-	public HashMap<String, Double> getRatingOfAllCitys() {
+	public HashMap<String, Double> getRatingOfAllCitysOLD() {
 		List<Business> Business = repository.findAll();
 		HashMap<String, Double> CityPlusBusinessRating = new HashMap<>();
 		HashMap<String, Integer> Counter = new HashMap<>();
@@ -116,6 +117,19 @@ public class BusinessService {
 			CityPlusBusinessRating.replace(city, d);
 		}
 		return CityPlusBusinessRating;
+	}
+
+	// Returns a map Cointaining the City names with the average stars its of
+	// Businesses
+	public List<String> getRatingOfAllCitys() {
+		List<String> business = getAllCitys();
+		ArrayList<String> list = new ArrayList<>();
+
+		for (String b : business) {
+				list.add(b);
+				list.add(getRatingOfCity(b).toString());
+		}
+		return list;
 	}
 
 	// Returns a list holding the Top 10 Businesses of the given city
@@ -190,16 +204,16 @@ public class BusinessService {
 		query.fields().include("city").exclude("_id");
 
 		List<Business> list = template.find(query, Business.class);
-		List<String> city = Arrays.asList(list.get(0).getCity(), list.get(1).getCity());
+		ArrayList<String> city = new ArrayList<>();
 		String s = "Santa Barbara";
-		
-			for (Business b : list) {
-				s = b.getCity();
-				
-				if (!(city.contains(s) || s == null)) {
-					city.add(s);
-				}
+
+		for (Business b : list) {
+			s = b.getCity();
+
+			if (!(city.contains(s) || s == null)) {
+				city.add(s);
 			}
+		}
 		return city;
 	}
 

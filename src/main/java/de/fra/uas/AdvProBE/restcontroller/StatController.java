@@ -38,8 +38,7 @@ public class StatController {
 	}
 
 	// Get�s the number of Businesses found in the given City
-	@GetMapping
-	@RequestMapping("business/totalStats/{city}")
+	@GetMapping("business/totalStats/{city}")
 	public ResponseEntity<Integer> getBusinessPerCity(@PathVariable String city) {
 		Integer i = bService.getBusinessesPerCity(city);
 		if (i != null) {
@@ -50,60 +49,53 @@ public class StatController {
 	}
 
 	// Get�s all the counts�s of Businesses found in all Citys
-	@GetMapping
-	@RequestMapping("busines/countCity")
+	@GetMapping("busines/countCity")
 	public ResponseEntity<List<String>> getBusinessofAllCitys() {
 		return new ResponseEntity<List<String>>(bService.getBusinessofAllCitys(), HttpStatus.OK);
 	}
 
 	// Get�s the average Rating for the given City
-	@GetMapping
-	@RequestMapping("city/rating/average/{city}")
-	public ResponseEntity<HashMap<String, Double>> getRatingOfCity(@PathVariable String city) {
-		HashMap<String, Double> map = bService.getRatingOfCity(city);
-		if (map != null) {
-			return new ResponseEntity<HashMap<String, Double>>(map, HttpStatus.OK);
+	@GetMapping("city/rating/average/{city}")
+	public ResponseEntity<Double> getRatingOfCity(@PathVariable String city) {
+		Double d= bService.getRatingOfCity(city);
+		if (d != null) {
+			return new ResponseEntity<Double>(d, HttpStatus.OK);
 		} else {
-			return new ResponseEntity<HashMap<String, Double>>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Double>(HttpStatus.NOT_FOUND);
 		}
 	}
 
 	// Get�s the average Rating of all Citys
-	@GetMapping
-	@RequestMapping("city/all/rating/average")
-	public ResponseEntity<HashMap<String, Double>> getRatingOfAllCity() {
-		return new ResponseEntity<HashMap<String, Double>>(bService.getRatingOfAllCitys(), HttpStatus.OK);
+	@GetMapping("city/all/rating/average")
+	public ResponseEntity<List<String>> getRatingOfAllCity() {
+		return new ResponseEntity<List<String>>(bService.getRatingOfAllCitys(), HttpStatus.OK);
 	}
 
 	// Get�s the number of Reviews written for a Business in the given City
-	@GetMapping
-	@RequestMapping("reviews/city/{city}")
-	public ResponseEntity<HashMap<String, Integer>> getReviewsPerCity(@PathVariable String city) {
-		HashMap<String, Integer> map = rService.getReviewsPerCity(city);
-		if (map != null) {
-			return new ResponseEntity<HashMap<String, Integer>>(map, HttpStatus.OK);
+	@GetMapping("reviews/city/{city}")
+	public ResponseEntity<Integer> getReviewsPerCity(@PathVariable String city) {
+		Integer i = rService.getReviewsPerCity(city);
+		if (i != null) {
+			return new ResponseEntity<Integer>(i, HttpStatus.OK);
 		} else {
-			return new ResponseEntity<HashMap<String, Integer>>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Integer>(HttpStatus.NOT_FOUND);
 		}
 	}
 
 	// Get�s all the counts�s of Reviews written for a Business in all Citys
-	@GetMapping
-	@RequestMapping("review/all/city/count")
+	@GetMapping("review/all/city/count")
 	public ResponseEntity<HashMap<String, Integer>> getReviewsofAllCitys() {
 		return new ResponseEntity<HashMap<String, Integer>>(rService.getReviewsofAllCitys(), HttpStatus.OK);
 	}
 
 	// Get�s all the Reviews in a timespan
-	@GetMapping
-	@RequestMapping("reviews/timespan")
+	@GetMapping("reviews/timespan")
 	public ResponseEntity<List<LocalDateTime>> getReviewsTimeline() {
 		return new ResponseEntity<List<LocalDateTime>>(rService.getReviewsTimeline(), HttpStatus.OK);
 	}
 
 	// Get�s all the Reviews in a timespan
-	@GetMapping
-	@RequestMapping("business/top/ten/{designation}/{name}")
+	@GetMapping("business/top/ten/{designation}/{name}")
 	public ResponseEntity<List<Business>> getTopRestaurant(@PathVariable String designation,
 			@PathVariable String name) {
 		List<Business> list = bService.getTopTenRestaurant(designation, name);
@@ -115,8 +107,7 @@ public class StatController {
 	}
 
 	// Get�s all the Reviews in a timespan
-	@GetMapping
-	@RequestMapping("business/top/ten/total")
+	@GetMapping("business/top/ten/total")
 	public ResponseEntity<List<Business>> getTopRestaurantTotal() {
 		List<Business> list = bService.getTopTenRestaurants();
 		if (list != null) {
@@ -127,8 +118,7 @@ public class StatController {
 	}
 
 	// Get�s all the checkins of a Business
-	@GetMapping
-	@RequestMapping("business/checkins/{city}/{name}")
+	@GetMapping("business/checkins/{city}/{name}")
 	public ResponseEntity<List<LocalDateTime>> getCheckins(@PathVariable String city, @PathVariable String name) {
 		List<LocalDateTime> list = bService.getCheckins(city, name);
 		if (list != null) {
