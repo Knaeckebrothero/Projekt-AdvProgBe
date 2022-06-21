@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
@@ -36,20 +37,18 @@ public class ReviewService {
 	}
 
 	// Returns the number of Reviews written for a Business of the given City
-	public HashMap<String, Integer> getReviewsPerCity(String city) {
-
+	public Integer getReviewsPerCity(String city) {
 		Query query = new Query();
-		query.fields().exclude("text");
+		query.fields().exclude("_id").include("businessId");
+		query.addCriteria(Criteria.where("city").is(city));
+		List<Business> BusinessOfCity = template.find(query, Business.class);
 
-		List<Business> BusinessOfCity = bRepository.findByCity(city);
-		Integer reviews = 0;
-		for (Business b : BusinessOfCity) {
-			reviews += repository.findReviewByBusinessId(b.getBusinessId()).size();
-		}
-		if (reviews < 0) {
-			HashMap<String, Integer> map = new HashMap<>();
-			map.put(city, reviews);
-			return map;
+		if (BusinessOfCity.size() > 0) {
+			Integer reviews = 0;
+			for (Business b : BusinessOfCity) {
+				reviews += repository.countFetchedDocumentsForRievwId(b.getBusinessId());
+			}
+			return reviews;
 		} else {
 			return null;
 		}
