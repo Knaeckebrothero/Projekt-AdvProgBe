@@ -1,5 +1,6 @@
 package de.fra.uas.AdvProBE.restcontroller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -44,4 +45,10 @@ public class MapController {
 	public ResponseEntity<List<String>> getAllCategories(){
 		return new ResponseEntity<List<String>> (bService.getAllCategories(),HttpStatus.OK);
 	}
+	
+	//Get´s a list of all the dates that exist in checkins or reviews
+		@GetMapping("dates")
+		public ResponseEntity<List<LocalDate>> getAllDates(){
+			return new ResponseEntity<List<LocalDate>> (bService.getAllDates(),HttpStatus.OK);
+		}
 }

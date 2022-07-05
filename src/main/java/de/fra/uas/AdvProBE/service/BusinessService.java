@@ -1,7 +1,9 @@
 package de.fra.uas.AdvProBE.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +14,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import de.fra.uas.AdvProBE.db.entitys.Business;
+import de.fra.uas.AdvProBE.db.entitys.Review;
+import de.fra.uas.AdvProBE.db.entitys.Tip;
 import de.fra.uas.AdvProBE.db.repositorys.BusinessRepository;
 import lombok.AllArgsConstructor;
 
@@ -126,8 +130,8 @@ public class BusinessService {
 		ArrayList<String> list = new ArrayList<>();
 
 		for (String b : business) {
-				list.add(b);
-				list.add(getRatingOfCity(b).toString());
+			list.add(b);
+			list.add(getRatingOfCity(b).toString());
 		}
 		return list;
 	}
@@ -230,14 +234,63 @@ public class BusinessService {
 		query.fields().include("categories").exclude("_id");
 		List<Business> list = template.find(query, Business.class);
 		List<String> categories = new ArrayList<>();
-		
-		for(Business b : list) {
-			for(String s : b.getCategories()) {
-				if(!categories.contains(s)) {
+
+		for (Business b : list) {
+			for (String s : b.getCategories()) {
+				if (!categories.contains(s)) {
 					categories.add(s);
 				}
 			}
 		}
+		return categories;
+	}
+
+	public List<LocalDate> getAllDates() {
+		Query bQuery = new Query();
+		bQuery.fields().include("checkins").exclude("_id");
+		List<Business> bList = template.find(bQuery, Business.class);
+
+		Query query = new Query();
+		query.fields().include("date").exclude("_id");
+		List<Review> rList = template.find(query, Review.class);
+
+		List<Tip> tList = template.find(query, Tip.class);
+
+		// DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate l;
+
+		List<LocalDate> categories = new ArrayList<>();
+
+		for (Business b : bList) {
+			if (b.getCheckins() != null) {
+				for (LocalDateTime s : b.getCheckins()) {
+					l = s.toLocalDate();
+					// l.format(formatter);
+					if (!categories.contains(l)) {
+						categories.add(l);
+					}
+				}
+			}
+		}
+
+		for (Review r : rList) {
+			if (r != null) {
+				l = r.getDate().toLocalDate();
+				if (!categories.contains(l)) {
+					categories.add(l);
+				}
+			}
+		}
+
+		for (Tip t : tList) {
+			if (t != null) {
+				l = t.getDate().toLocalDate();
+				if (!categories.contains(l)) {
+					categories.add(l);
+				}
+			}
+		}
+		Collections.sort(categories);
 		return categories;
 	}
 }
