@@ -32,7 +32,6 @@ public interface BusinessRepository extends MongoRepository<Business, String> {
 	@Query("{'city': ?0,  'name' : ?1}")
 	Optional<Business> findByCityAndName(String city, String name);
 
-	// Custom Query´s
 	@Query(value = "{'city': {$regex: ?0, $options: 'i'}}", count = true)
 	public Integer countFetchedDocumentsForBusinessCity(String city);
 }

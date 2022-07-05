@@ -1,7 +1,6 @@
 package de.fra.uas.AdvProBE.restcontroller;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -12,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.fra.uas.AdvProBE.db.entitys.Business;
+import de.fra.uas.AdvProBE.db.entitys.Tip;
 import de.fra.uas.AdvProBE.service.BusinessService;
 import de.fra.uas.AdvProBE.service.ReviewService;
+import de.fra.uas.AdvProBE.service.TipService;
 import lombok.AllArgsConstructor;
 
 //Controller that deals with all the information needed to display statistics
@@ -24,6 +25,7 @@ public class StatController {
 
 	private BusinessService bService;
 	private ReviewService rService;
+	private TipService tService;
 
 	// Get´s a business with it´s information
 	@GetMapping("business/custom/{city}/{name}")
@@ -57,7 +59,7 @@ public class StatController {
 	// Getï¿½s the average Rating for the given City
 	@GetMapping("city/rating/average/{city}")
 	public ResponseEntity<Double> getRatingOfCity(@PathVariable String city) {
-		Double d= bService.getRatingOfCity(city);
+		Double d = bService.getRatingOfCity(city);
 		if (d != null) {
 			return new ResponseEntity<Double>(d, HttpStatus.OK);
 		} else {
@@ -71,7 +73,7 @@ public class StatController {
 		return new ResponseEntity<List<String>>(bService.getRatingOfAllCitys(), HttpStatus.OK);
 	}
 
-	// Getï¿½s the number of Reviews written for a Business in the given City
+	// KAPUT REPARIEREN!!!
 	@GetMapping("reviews/city/{city}")
 	public ResponseEntity<Integer> getReviewsPerCity(@PathVariable String city) {
 		Integer i = rService.getReviewsPerCity(city);
@@ -82,10 +84,10 @@ public class StatController {
 		}
 	}
 
-	// Getï¿½s all the countsï¿½s of Reviews written for a Business in all Citys
+	// KAPUT REPARIEREN!!!
 	@GetMapping("review/all/city/count")
-	public ResponseEntity<HashMap<String, Integer>> getReviewsofAllCitys() {
-		return new ResponseEntity<HashMap<String, Integer>>(rService.getReviewsofAllCitys(), HttpStatus.OK);
+	public ResponseEntity<List<String>> getReviewsofAllCitys() {
+		return new ResponseEntity<List<String>>(rService.getReviewsofAllCitys(), HttpStatus.OK);
 	}
 
 	// Getï¿½s all the Reviews in a timespan
@@ -94,7 +96,7 @@ public class StatController {
 		return new ResponseEntity<List<LocalDateTime>>(rService.getReviewsTimeline(), HttpStatus.OK);
 	}
 
-	// Getï¿½s all the Reviews in a timespan
+	// Gets the top 10 Businesses
 	@GetMapping("business/top/ten/{designation}/{name}")
 	public ResponseEntity<List<Business>> getTopRestaurant(@PathVariable String designation,
 			@PathVariable String name) {
@@ -106,10 +108,10 @@ public class StatController {
 		}
 	}
 
-	// Getï¿½s all the Reviews in a timespan
+	// Gets the top 10 Businesses worldwide
 	@GetMapping("business/top/ten/total")
 	public ResponseEntity<List<Business>> getTopRestaurantTotal() {
-		List<Business> list = bService.getTopTenRestaurants();
+		List<Business> list = bService.getTopTenRestaurantTotal();
 		if (list != null) {
 			return new ResponseEntity<List<Business>>(list, HttpStatus.OK);
 		} else {
@@ -125,6 +127,23 @@ public class StatController {
 			return new ResponseEntity<List<LocalDateTime>>(list, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<List<LocalDateTime>>(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	// Gets random Tip worldwide
+	@GetMapping("tip/random/total")
+	public ResponseEntity<Tip> getRadnomTip() {
+		return new ResponseEntity<Tip> (tService.getRandomTipTotal(), HttpStatus.OK);
+	}
+
+	// Gets random Tip
+	@GetMapping("tip/random/{designation}/{name}")
+	public ResponseEntity<Tip> getTopTipTotal(@PathVariable String designation, @PathVariable String name) {
+		Tip t = tService.getRandomTip(designation, name);
+		if (t != null) {
+			return new ResponseEntity<Tip>(t, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Tip>(HttpStatus.BAD_REQUEST);
 		}
 	}
 }

@@ -55,7 +55,7 @@ public class ReviewService {
 	}
 
 	// Returns a map Cointaining the City names with the number of reviews
-	public HashMap<String, Integer> getReviewsofAllCitys() {
+	public List<String> getReviewsofAllCitys() {
 		LinkedList<Review> Reviews = new LinkedList<>();
 		Reviews.addAll(repository.findAll());
 		LinkedList<Business> Business = new LinkedList<>();
@@ -76,7 +76,7 @@ public class ReviewService {
 			}
 		}
 		;
-		return CityPlusReviewsCount;
+		return null;
 	}
 
 	// Returns a sorted list with dates representing the date at which a review was

@@ -161,7 +161,7 @@ public class BusinessService {
 	}
 
 	// Returns a list holding the Top 10 Businesses total
-	public List<Business> getTopTenRestaurants() {
+	public List<Business> getTopTenRestaurantTotal() {
 		List<Business> list = repository.findAll();
 		list.sort(Business.BusinessReviewCountComparator);
 		if (list.size() > 10) {
@@ -223,5 +223,21 @@ public class BusinessService {
 		list.subList(50, list.size()).clear();
 		return list;
 		// return repository.findAll();
+	}
+
+	public List<String> getAllCategories() {
+		Query query = new Query();
+		query.fields().include("categories").exclude("_id");
+		List<Business> list = template.find(query, Business.class);
+		List<String> categories = new ArrayList<>();
+		
+		for(Business b : list) {
+			for(String s : b.getCategories()) {
+				if(!categories.contains(s)) {
+					categories.add(s);
+				}
+			}
+		}
+		return categories;
 	}
 }
