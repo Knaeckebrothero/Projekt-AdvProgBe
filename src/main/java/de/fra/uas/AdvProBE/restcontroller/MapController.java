@@ -3,6 +3,8 @@ package de.fra.uas.AdvProBE.restcontroller;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.fra.uas.AdvProBE.db.entitys.Business;
+import de.fra.uas.AdvProBE.preCalculate.preProcessed;
 import de.fra.uas.AdvProBE.service.BusinessService;
 import lombok.AllArgsConstructor;
 
@@ -20,6 +23,7 @@ import lombok.AllArgsConstructor;
 @RequestMapping("map/")
 public class MapController {
 
+	private MongoTemplate template;
 	private BusinessService bService;
 
 	// Get All Businesses (Only for development purposes)
@@ -49,6 +53,8 @@ public class MapController {
 	//Get´s a list of all the dates that exist in checkins or reviews
 		@GetMapping("dates")
 		public ResponseEntity<List<LocalDate>> getAllDates(){
-			return new ResponseEntity<List<LocalDate>> (bService.getAllDates(),HttpStatus.OK);
+			Query query = new Query();
+			query.fields().include("allDates").exclude("_id");
+			return new ResponseEntity<List<LocalDate>> (template.find(query, preProcessed.class).get(0).getAllDates(),HttpStatus.OK);
 		}
 }

@@ -1,8 +1,11 @@
 package de.fra.uas.AdvProBE.restcontroller;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import de.fra.uas.AdvProBE.db.entitys.Business;
 import de.fra.uas.AdvProBE.db.entitys.Tip;
+import de.fra.uas.AdvProBE.preCalculate.preProcessed;
 import de.fra.uas.AdvProBE.service.BusinessService;
 import de.fra.uas.AdvProBE.service.ReviewService;
 import de.fra.uas.AdvProBE.service.TipService;
@@ -26,6 +30,7 @@ public class StatController {
 	private BusinessService bService;
 	private ReviewService rService;
 	private TipService tService;
+	private MongoTemplate template;
 
 	// Get�s a business with it�s information
 	@GetMapping("business/custom/{city}/{name}")
@@ -53,7 +58,9 @@ public class StatController {
 	// Get�s all the counts�s of Businesses found in all Citys
 	@GetMapping("business/countCity")
 	public ResponseEntity<List<String>> getBusinessofAllCitys() {
-		return new ResponseEntity<List<String>>(bService.getBusinessofAllCitys(), HttpStatus.OK);
+		Query query = new Query();
+		query.fields().include("allBusinessesPerCity").exclude("_id");
+		return new ResponseEntity<List<String>>(template.find(query, preProcessed.class).get(0).getAllBusinessesPerCity(), HttpStatus.OK);
 	}
 
 	// Get�s the average Rating for the given City
@@ -70,10 +77,12 @@ public class StatController {
 	// Get�s the average Rating of all Citys
 	@GetMapping("city/all/rating/average")
 	public ResponseEntity<List<String>> getRatingOfAllCity() {
-		return new ResponseEntity<List<String>>(bService.getRatingOfAllCitys(), HttpStatus.OK);
+		Query query = new Query();
+		query.fields().include("allAverageRatingsPerCity").exclude("_id");
+		return new ResponseEntity<List<String>>(template.find(query, preProcessed.class).get(0).getAllAverageRatingsPerCity(), HttpStatus.OK);
 	}
 
-	// KAPUT REPARIEREN!!!
+	//Gets the sum of reivews written for a business in the given city
 	@GetMapping("reviews/city/{city}")
 	public ResponseEntity<Integer> getReviewsPerCity(@PathVariable String city) {
 		Integer i = rService.getReviewsPerCity(city);
@@ -86,14 +95,16 @@ public class StatController {
 
 	// KAPUT REPARIEREN!!!
 	@GetMapping("review/all/city/count")
-	public ResponseEntity<List<String>> getReviewsofAllCitys() {
-		return new ResponseEntity<List<String>>(rService.getReviewsofAllCitys(), HttpStatus.OK);
+	public ResponseEntity<HashMap<String, Integer>> getReviewsofAllCitys() {
+		return new ResponseEntity<HashMap<String, Integer>>(rService.getReviewsofAllCitys(), HttpStatus.OK);
 	}
 
 	// Get�s all the Reviews in a timespan
 	@GetMapping("reviews/timespan")
 	public ResponseEntity<List<LocalDateTime>> getReviewsTimeline() {
-		return new ResponseEntity<List<LocalDateTime>>(rService.getReviewsTimeline(), HttpStatus.OK);
+		Query query = new Query();
+		query.fields().include("allReviewsTimespan").exclude("_id");
+		return new ResponseEntity<List<LocalDateTime>>(template.find(query, preProcessed.class).get(0).getAllReviewsTimespan(), HttpStatus.OK);
 	}
 
 	// Gets the top 10 Businesses
@@ -111,12 +122,9 @@ public class StatController {
 	// Gets the top 10 Businesses worldwide
 	@GetMapping("business/top/ten/total")
 	public ResponseEntity<List<Business>> getTopRestaurantTotal() {
-		List<Business> list = bService.getTopTenRestaurantTotal();
-		if (list != null) {
-			return new ResponseEntity<List<Business>>(list, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<List<Business>>(HttpStatus.BAD_REQUEST);
-		}
+		Query query = new Query();
+		query.fields().include("topTenBusinessesWorldWide").exclude("_id");
+			return new ResponseEntity<List<Business>>(template.find(query, preProcessed.class).get(0).getTopTenBusinessesWorldWide(), HttpStatus.OK);
 	}
 
 	// Get�s all the checkins of a Business

@@ -25,5 +25,9 @@ public class Review {
 	private Integer cool;
 	private String text;
 	private LocalDateTime date;
-
+	
+	public Review(String businessId) {
+		super();
+		this.businessId = businessId;
+	}
 }
