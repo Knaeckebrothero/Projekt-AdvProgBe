@@ -7,8 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 
-import de.fra.uas.AdvProBE.db.repositorys.BusinessRepository;
-
 @SpringBootApplication
 public class AdvProBeApplication {
 
@@ -17,7 +15,7 @@ public class AdvProBeApplication {
 	}
 	
 	@Bean
-	CommandLineRunner runner(BusinessRepository repository, MongoTemplate mongoTemplate){
+	CommandLineRunner runner(MongoTemplate mongoTemplate){
 		return args -> {
 			Query query = new Query();
 			query.fields().include("name").exclude("_id");
