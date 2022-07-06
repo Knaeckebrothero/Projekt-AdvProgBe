@@ -38,24 +38,30 @@ public class ReviewService {
 
 	// Returns the number of Reviews written for a Business of the given City
 	public Integer getReviewsPerCity(String city) {
-		Query query = new Query();
-		query.fields().exclude("_id").include("businessId");
-		query.addCriteria(Criteria.where("city").is(city));
-		List<Business> BusinessOfCity = template.find(query, Business.class);
+		Query bQuery = new Query();
+		bQuery.fields().exclude("_id").include("businessId");
+		bQuery.addCriteria(Criteria.where("city").is(city));
+		List<Business> businessOfCity = template.find(bQuery, Business.class);
 
-		if (BusinessOfCity.size() > 0) {
-			Integer reviews = 0;
-			for (Business b : BusinessOfCity) {
-				reviews += repository.countFetchedDocumentsForRievwId(b.getBusinessId());
+		Query rQuery = new Query();
+		rQuery.fields().include("businessId").exclude("_id");
+		List<Review> allReviews = template.find(rQuery, Review.class);
+
+		List<Review> rList = new ArrayList<>();
+
+		if (businessOfCity.size() > 0) {
+			for (Business b : businessOfCity) {
+				rList.add(new Review(b.getBusinessId()));
 			}
-			return reviews;
+			allReviews.retainAll(rList);
+			return allReviews.size();
 		} else {
 			return null;
 		}
 	}
 
 	// Returns a map Cointaining the City names with the number of reviews
-	public List<String> getReviewsofAllCitys() {
+	public HashMap<String, Integer> getReviewsofAllCitys() {
 		LinkedList<Review> Reviews = new LinkedList<>();
 		Reviews.addAll(repository.findAll());
 		LinkedList<Business> Business = new LinkedList<>();
@@ -76,7 +82,7 @@ public class ReviewService {
 			}
 		}
 		;
-		return null;
+		return CityPlusReviewsCount;
 	}
 
 	// Returns a sorted list with dates representing the date at which a review was
