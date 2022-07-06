@@ -23,7 +23,7 @@ public class MapController {
 	private BusinessService bService;
 
 	// Get All Businesses (Only for development purposes)
-	@GetMapping("Preview")
+	@GetMapping("dev")
 	public ResponseEntity<List<Business>> getAllBusinesses() {
 		return new ResponseEntity<List<Business>>(bService.getAllBusinesses(), HttpStatus.OK);
 	}
@@ -35,9 +35,9 @@ public class MapController {
 	}
 
 	// Get´s a list with all the businesses for a city
-	@GetMapping("businesses/{city}/")
+	@GetMapping("businesses/{city}")
 	public ResponseEntity<List<String>> getAllBusinessesForCity(@PathVariable String city) {
-		return new ResponseEntity<List<String>>(bService.getAllCitys(), HttpStatus.OK);
+		return new ResponseEntity<List<String>>(bService.getAllBusinessesForACity(city), HttpStatus.OK);
 	}
 	
 	//Get´s a list of all the categories

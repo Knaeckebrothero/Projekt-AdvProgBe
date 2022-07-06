@@ -220,6 +220,20 @@ public class BusinessService {
 		}
 		return city;
 	}
+	
+	public List<String> getAllBusinessesForACity(String city) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("city").is(city));
+		query.fields().include("name").exclude("_id");
+		
+		List<Business> bList = template.find(query, Business.class);
+		List<String> nList = new ArrayList();
+		
+		for(Business b : bList) {
+			nList.add(b.getName());
+		}
+		return nList;
+	}
 
 	public List<Business> getAllBusinesses() {
 
