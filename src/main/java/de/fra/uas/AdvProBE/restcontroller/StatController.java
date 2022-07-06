@@ -27,7 +27,7 @@ public class StatController {
 	private ReviewService rService;
 	private TipService tService;
 
-	// Get´s a business with it´s information
+	// Getï¿½s a business with itï¿½s information
 	@GetMapping("business/custom/{city}/{name}")
 	public ResponseEntity<Business> getBusiness(@PathVariable String city, @PathVariable String name) {
 		Business business = bService.getBusiness(city, name);
@@ -51,7 +51,7 @@ public class StatController {
 	}
 
 	// Getï¿½s all the countsï¿½s of Businesses found in all Citys
-	@GetMapping("busines/countCity")
+	@GetMapping("business/countCity")
 	public ResponseEntity<List<String>> getBusinessofAllCitys() {
 		return new ResponseEntity<List<String>>(bService.getBusinessofAllCitys(), HttpStatus.OK);
 	}
