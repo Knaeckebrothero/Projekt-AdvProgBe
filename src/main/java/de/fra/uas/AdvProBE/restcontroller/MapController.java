@@ -31,7 +31,7 @@ public class MapController {
 	public ResponseEntity<List<Business>> getAllBusinesses() {
 		return new ResponseEntity<List<Business>>(bService.getAllBusinesses(), HttpStatus.OK);
 	}
-	
+
 	// Get큦 a list with all the citynames
 	@GetMapping("citys")
 	public ResponseEntity<List<String>> getAllCitys() {
@@ -43,18 +43,26 @@ public class MapController {
 	public ResponseEntity<List<String>> getAllBusinessesForCity(@PathVariable String city) {
 		return new ResponseEntity<List<String>>(bService.getAllBusinessesForACity(city), HttpStatus.OK);
 	}
-	
-	//Get큦 a list of all the categories
+
+	// Get큦 a list of all the categories
 	@GetMapping("categories")
-	public ResponseEntity<List<String>> getAllCategories(){
-		return new ResponseEntity<List<String>> (bService.getAllCategories(),HttpStatus.OK);
+	public ResponseEntity<List<String>> getAllCategories() {
+		return new ResponseEntity<List<String>>(bService.getAllCategories(), HttpStatus.OK);
 	}
-	
-	//Get큦 a list of all the dates that exist in checkins or reviews
-		@GetMapping("dates")
-		public ResponseEntity<List<LocalDate>> getAllDates(){
-			Query query = new Query();
-			query.fields().include("allDates").exclude("_id");
-			return new ResponseEntity<List<LocalDate>> (template.find(query, preProcessed.class).get(0).getAllDates(),HttpStatus.OK);
-		}
+
+	// Get큦 a list of all the dates that exist in checkins or reviews
+	@GetMapping("dates")
+	public ResponseEntity<List<LocalDate>> getAllDates() {
+		Query query = new Query();
+		query.fields().include("allDates").exclude("_id");
+		return new ResponseEntity<List<LocalDate>>(template.find(query, preProcessed.class).get(0).getAllDates(),
+				HttpStatus.OK);
+	}
+
+	// Get all Businesses filtered
+	@GetMapping("businesses/filtered/basic/{state}/{city}/{stars}/{open}/{review}")
+	public ResponseEntity<List<Business>> getFilteredBusinesses(@PathVariable String state, @PathVariable String city,
+			@PathVariable String stars, @PathVariable String open, @PathVariable String review) {
+		return new ResponseEntity<List<Business>>(bService.getFilteredBusinesses(state, city, stars, open, review), HttpStatus.OK);
+	}
 }

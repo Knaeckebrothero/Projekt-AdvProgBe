@@ -36,11 +36,18 @@ public class BusinessService {
 		return (double) tmp / factor;
 	}
 
+	private static Query businessFormat() {
+		Query query = new Query();
+		query.fields().exclude("_id").include("name", "city", "latitude", "longitude", "stars", "reviewCount",
+				"isOpen");
+		return query;
+	}
+
 	// Returns a Business by city and its name
 	public Business getBusiness(String city, String name) {
-		Optional<Business> business = repository.findByCityAndName(city, name);
-		if (business.isPresent()) {
-			return business.get();
+		List<Business> business = template.find(businessFormat().addCriteria(Criteria.where("city").is(city).and("name").is(name)), Business.class);
+		if (!business.isEmpty()) {
+			return business.get(0);
 		} else {
 			return null;
 		}
@@ -220,27 +227,27 @@ public class BusinessService {
 		}
 		return city;
 	}
-	
+
 	public List<String> getAllBusinessesForACity(String city) {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("city").is(city));
 		query.fields().include("name").exclude("_id");
-		
+
 		List<Business> bList = template.find(query, Business.class);
 		List<String> nList = new ArrayList();
-		
-		for(Business b : bList) {
+
+		for (Business b : bList) {
 			nList.add(b.getName());
 		}
 		return nList;
 	}
 
 	public List<Business> getAllBusinesses() {
-
-		List<Business> list = repository.findAll();
-		list.subList(50, list.size()).clear();
-		return list;
-		// return repository.findAll();
+		/*
+		 * List<Business> list = repository.findAll(); list.subList(50,
+		 * list.size()).clear(); return list;
+		 */
+		return repository.findAll();
 	}
 
 	public List<String> getAllCategories() {
@@ -306,5 +313,32 @@ public class BusinessService {
 		}
 		Collections.sort(categories);
 		return categories;
+	}
+
+	public List<Business> getFilteredBusinesses(String state, String city, String stars, String open,
+			String review) {
+		Query filter = businessFormat();
+		
+		if(!state.equals("empty")) {
+			filter.addCriteria(Criteria.where("state").is(state));
+		}
+		
+		if(!city.equals("empty")) {
+			filter.addCriteria(Criteria.where("city").is(city));
+		}
+		
+		if(!stars.equals("empty")) {
+			filter.addCriteria(Criteria.where("stars").is(Integer.parseInt(stars)));
+		}
+		
+		if(!open.equals("empty")) {
+			filter.addCriteria(Criteria.where("isOpen").is(Boolean.parseBoolean(open)));
+		}
+		
+		if(!review.equals("empty")) {
+			filter.addCriteria(Criteria.where("reviewCount").is(Integer.parseInt(review)));
+		}
+		
+		return template.find(filter, Business.class);
 	}
 }
