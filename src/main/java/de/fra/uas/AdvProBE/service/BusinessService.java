@@ -45,7 +45,8 @@ public class BusinessService {
 
 	// Returns a Business by city and its name
 	public Business getBusiness(String city, String name) {
-		List<Business> business = template.find(businessFormat().addCriteria(Criteria.where("city").is(city).and("name").is(name)), Business.class);
+		List<Business> business = template.find(
+				businessFormat().addCriteria(Criteria.where("city").is(city).and("name").is(name)), Business.class);
 		if (!business.isEmpty()) {
 			return business.get(0);
 		} else {
@@ -234,7 +235,7 @@ public class BusinessService {
 		query.fields().include("name").exclude("_id");
 
 		List<Business> bList = template.find(query, Business.class);
-		List<String> nList = new ArrayList();
+		List<String> nList = new ArrayList<>();
 
 		for (Business b : bList) {
 			nList.add(b.getName());
@@ -315,30 +316,56 @@ public class BusinessService {
 		return categories;
 	}
 
-	public List<Business> getFilteredBusinesses(String state, String city, String stars, String open,
-			String review) {
+	public List<Business> getFilteredBusinesses(String state, String city, String stars, String open, String review) {
 		Query filter = businessFormat();
-		
-		if(!state.equals("empty")) {
+
+		if (!state.equals("empty")) {
 			filter.addCriteria(Criteria.where("state").is(state));
 		}
-		
-		if(!city.equals("empty")) {
+
+		if (!city.equals("empty")) {
 			filter.addCriteria(Criteria.where("city").is(city));
 		}
-		
-		if(!stars.equals("empty")) {
+
+		if (!stars.equals("empty")) {
 			filter.addCriteria(Criteria.where("stars").is(Integer.parseInt(stars)));
 		}
-		
-		if(!open.equals("empty")) {
+
+		if (!open.equals("empty")) {
 			filter.addCriteria(Criteria.where("isOpen").is(Boolean.parseBoolean(open)));
 		}
-		
-		if(!review.equals("empty")) {
+
+		if (!review.equals("empty")) {
 			filter.addCriteria(Criteria.where("reviewCount").is(Integer.parseInt(review)));
 		}
-		
+
+		return template.find(filter, Business.class);
+	}
+
+	public List<Business> getAdvancedFilteredBusinesses(String stateList, String cityList, String operatorStars,
+			String stars, String open, String operatorReview, String review) {
+		Query filter = businessFormat();
+
+		if (!stateList.equals("empty")) {
+			filter.addCriteria(Criteria.where("state").is(stateList));
+		}
+
+		if (!cityList.equals("empty")) {
+			filter.addCriteria(Criteria.where("city").is(cityList));
+		}
+
+		if (!stars.equals("empty")) {
+			filter.addCriteria(Criteria.where("stars").is(Integer.parseInt(stars)));
+		}
+
+		if (!open.equals("empty")) {
+			filter.addCriteria(Criteria.where("isOpen").is(Boolean.parseBoolean(open)));
+		}
+
+		if (!review.equals("empty")) {
+			filter.addCriteria(Criteria.where("reviewCount").is(Integer.parseInt(review)));
+		}
+
 		return template.find(filter, Business.class);
 	}
 }

@@ -61,8 +61,15 @@ public class MapController {
 
 	// Get all Businesses filtered
 	@GetMapping("businesses/filtered/basic/{state}/{city}/{stars}/{open}/{review}")
-	public ResponseEntity<List<Business>> getFilteredBusinesses(@PathVariable String state, @PathVariable String city,
+	public ResponseEntity<List<Business>> getBasicFilteredBusinesses(@PathVariable String state, @PathVariable String city,
 			@PathVariable String stars, @PathVariable String open, @PathVariable String review) {
 		return new ResponseEntity<List<Business>>(bService.getFilteredBusinesses(state, city, stars, open, review), HttpStatus.OK);
 	}
+	
+	// Get all Businesses filtered
+		@GetMapping("businesses/filtered/advanced/{stateList}/{cityList}/{operatorStars}/{stars}/{open}/{operatorReview}/{review}")
+		public ResponseEntity<List<Business>> getAdvancedFilteredBusinesses(@PathVariable String stateList, @PathVariable String cityList,
+				@PathVariable String operatorStars, @PathVariable String stars, @PathVariable String open,@PathVariable String operatorReview, @PathVariable String review) {
+			return new ResponseEntity<List<Business>>(bService.getAdvancedFilteredBusinesses(stateList, cityList, operatorStars, stars, open, operatorReview, review), HttpStatus.OK);
+		}
 }

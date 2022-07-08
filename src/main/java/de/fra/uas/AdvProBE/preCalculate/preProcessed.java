@@ -1,7 +1,6 @@
 package de.fra.uas.AdvProBE.preCalculate;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -27,7 +26,6 @@ public class preProcessed {
 	private List<String> allBusinessesPerCity;
 	private List<String> allAverageRatingsPerCity;
 	//private List<String> allReviewsForAllCitys;
-	private List<LocalDateTime> allReviewsTimespan;
 	private List<Business> topTenBusinessesWorldWide;
 
 	public preProcessed(LocalDate preprocessedAtDay) {

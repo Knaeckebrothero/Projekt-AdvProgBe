@@ -1,10 +1,12 @@
 package de.fra.uas.AdvProBE.restcontroller;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import de.fra.uas.AdvProBE.db.entitys.Business;
 import de.fra.uas.AdvProBE.db.entitys.Tip;
 import de.fra.uas.AdvProBE.preCalculate.preProcessed;
+import de.fra.uas.AdvProBE.preCalculate.preProcessedReviews;
 import de.fra.uas.AdvProBE.service.BusinessService;
 import de.fra.uas.AdvProBE.service.ReviewService;
 import de.fra.uas.AdvProBE.service.TipService;
@@ -100,11 +103,12 @@ public class StatController {
 	}
 
 	// Get�s all the Reviews in a timespan
-	@GetMapping("reviews/timespan")
-	public ResponseEntity<List<LocalDateTime>> getReviewsTimeline() {
+	@GetMapping("reviews/timespan/{counter}")
+	public ResponseEntity<List<LocalDateTime>> getReviewsTimeline(@PathVariable Integer counter) {
 		Query query = new Query();
-		query.fields().include("allReviewsTimespan").exclude("_id");
-		return new ResponseEntity<List<LocalDateTime>>(template.find(query, preProcessed.class).get(0).getAllReviewsTimespan(), HttpStatus.OK);
+		query.fields().include("allReviewsTimespan","counter").exclude("_id");
+		query.addCriteria(Criteria.where("preprocessedAtDay").is(LocalDate.now()).and("counter").is(counter));
+		return new ResponseEntity<List<LocalDateTime>>(template.find(query, preProcessedReviews.class).get(0).getAllReviewsTimespan(), HttpStatus.OK);
 	}
 
 	// Gets the top 10 Businesses

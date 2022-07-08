@@ -1,5 +1,6 @@
 package de.fra.uas.AdvProBE;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,6 +20,7 @@ import org.springframework.data.mongodb.core.query.Update;
 
 import de.fra.uas.AdvProBE.db.entitys.Business;
 import de.fra.uas.AdvProBE.preCalculate.preProcessed;
+import de.fra.uas.AdvProBE.preCalculate.preProcessedReviews;
 import de.fra.uas.AdvProBE.service.BusinessService;
 import de.fra.uas.AdvProBE.service.ReviewService;
 
@@ -27,6 +29,15 @@ public class AdvProBeApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(AdvProBeApplication.class, args);
+	}
+
+	static <T> List<List<T>> chopped(List<T> list, final int L) {
+		List<List<T>> parts = new ArrayList<List<T>>();
+		final int N = list.size();
+		for (int i = 0; i < N; i += L) {
+			parts.add(new ArrayList<T>(list.subList(i, Math.min(N, i + L))));
+		}
+		return parts;
 	}
 
 	//@Bean
@@ -69,9 +80,11 @@ public class AdvProBeApplication {
 
 			try {
 				List<LocalDateTime> allReviewsTimespan = rService.getReviewsTimeline();
-				Update uAllReviewsTimespan = new Update();
-				uAllReviewsTimespan.set("allReviewsTimespan", allReviewsTimespan);
-				template.updateFirst(query, uAllReviewsTimespan, preProcessed.class);
+				List<List<LocalDateTime>> listList = chopped(allReviewsTimespan, 50000);
+
+				for (int i = 0; listList.size() > i; i++) {
+					template.insert(new preProcessedReviews(LocalDate.now(), i, listList.get(i)));
+				}
 			} catch (Exception E) {
 				System.out.println("allReviewsTimespan");
 			}
@@ -89,6 +102,11 @@ public class AdvProBeApplication {
 			uTimePreprocessingTookInMs.set("timePreprocessingTookInMs", System.nanoTime() - startTime);
 			template.updateFirst(query, uTimePreprocessingTookInMs, preProcessed.class);
 
+			Query rQuery = new Query();
+			rQuery.addCriteria(Criteria.where("preprocessedAtDay").ne(LocalDate.now()));
+			
+			template.remove(rQuery, preProcessed.class);
+			template.remove(rQuery, preProcessedReviews.class);
 			long elapsedTime = System.nanoTime() - startTime;
 			System.out.println("Total execution time was in Java in millis: " + elapsedTime / 1000000);
 		};
