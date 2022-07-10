@@ -25,12 +25,12 @@ public class Business {
 	private String state;
 	private Integer postalCode;
 	// Coordinates
-	private double latitude;
-	private double longitude;
+	private Double latitude;
+	private Double longitude;
 	// Infos
 	private Integer stars;
 	private Integer reviewCount;
-	private boolean isOpen;
+	private Boolean isOpen;
 	private List<String> categories;
 	//Opening Hours
 	private String Monday;

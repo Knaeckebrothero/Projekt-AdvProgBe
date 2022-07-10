@@ -37,6 +37,12 @@ public class MapController {
 	public ResponseEntity<List<String>> getAllCitys() {
 		return new ResponseEntity<List<String>>(bService.getAllCitys(), HttpStatus.OK);
 	}
+	
+	// Get´s a list with all the citynames
+		@GetMapping("states")
+		public ResponseEntity<List<String>> getAllStates() {
+			return new ResponseEntity<List<String>>(bService.getAllStates(), HttpStatus.OK);
+		}
 
 	// Get´s a list with all the businesses for a city
 	@GetMapping("businesses/{city}")
