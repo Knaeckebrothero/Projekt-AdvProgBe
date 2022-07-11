@@ -30,7 +30,7 @@ public class Business {
 	// Infos
 	private Integer stars;
 	private Integer reviewCount;
-	private Boolean isOpen;
+	private boolean isOpen;
 	private List<String> categories;
 	//Opening Hours
 	private String Monday;
