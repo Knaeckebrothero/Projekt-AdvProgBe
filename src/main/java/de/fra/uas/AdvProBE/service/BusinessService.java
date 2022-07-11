@@ -35,7 +35,13 @@ public class BusinessService {
 		long tmp = Math.round(value);
 		return (double) tmp / factor;
 	}
-
+	
+	private Query simpleBusinessFormat() {
+		Query query = new Query();
+		query.fields().exclude("_id").include("name", "city", "stars", "reviewCount");
+		return query;
+	}
+	
 	private static Query businessFormat() {
 		Query query = new Query();
 		query.fields().exclude("_id").include("name", "city", "latitude", "longitude", "stars", "reviewCount",
@@ -318,7 +324,7 @@ public class BusinessService {
 
 	public List<Business> getFilteredBusinesses(String state, String city, String stars, String open, String review) {
 		Query filter = businessFormat();
-
+		
 		if (!state.equals("empty")) {
 			filter.addCriteria(Criteria.where("state").is(state));
 		}
@@ -328,7 +334,7 @@ public class BusinessService {
 		}
 
 		if (!stars.equals("empty")) {
-			filter.addCriteria(Criteria.where("stars").is(Integer.parseInt(stars)));
+			filter.addCriteria(Criteria.where("stars").gt(Integer.parseInt(stars)));
 		}
 
 		if (!open.equals("empty")) {
@@ -336,15 +342,15 @@ public class BusinessService {
 		}
 
 		if (!review.equals("empty")) {
-			filter.addCriteria(Criteria.where("reviewCount").is(Integer.parseInt(review)));
+			filter.addCriteria(Criteria.where("reviewCount").gt(Integer.parseInt(review)));
 		}
-
+		
 		return template.find(filter, Business.class);
 	}
 
 	public List<Business> getAdvancedFilteredBusinesses(String stateList, String cityList, String operatorStars,
 			String stars, String open, String operatorReview, String review) {
-		Query filter = businessFormat();
+		Query filter = simpleBusinessFormat();
 
 		if (!stateList.equals("empty")) {
 			filter.addCriteria(Criteria.where("state").is(stateList));
@@ -367,5 +373,23 @@ public class BusinessService {
 		}
 
 		return template.find(filter, Business.class);
+	}
+
+	public List<String> getAllStates() {
+		Query query = new Query();
+		query.fields().include("state").exclude("_id");
+
+		List<Business> list = template.find(query, Business.class);
+		ArrayList<String> state = new ArrayList<>();
+		String s = "CA";
+
+		for (Business b : list) {
+			s = b.getState();
+
+			if (!(state.contains(s) || s == null)) {
+				state.add(s);
+			}
+		}
+		return state;
 	}
 }

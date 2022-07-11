@@ -12,7 +12,8 @@ import de.fra.uas.AdvProBE.db.entitys.Business;
 public interface BusinessRepository extends MongoRepository<Business, String> {
 	// Finds and returns a Business in case it exists
 	public Optional<Business> findBusinessById(String id);
-
+	public Optional<Business> findByName(String name);
+ 
 	// Custom Query`s
 	@Query("{'city': ?0}")
 	List<Business> findByCity(String city);
