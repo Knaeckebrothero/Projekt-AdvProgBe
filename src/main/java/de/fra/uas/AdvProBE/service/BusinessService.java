@@ -4,11 +4,20 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+<<<<<<< Updated upstream
+=======
+import java.util.Collection;
+>>>>>>> Stashed changes
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -274,6 +283,65 @@ public class BusinessService {
 		return categories;
 	}
 
+	public List<String> getAdvancedCategories(String categorie) {
+		Query query = new Query();
+		query.fields().include("categories").exclude("_id");
+		List<Business> list = template.find(query, Business.class);
+		List<String> categories = new ArrayList<>();
+
+		for (Business b : list) {
+			for (String s : b.getCategories()) {
+				if (!categories.contains(s)) {
+					categories.add(s);
+				}
+			}
+		}
+
+		Collection<String> tokens = Arrays.asList(categorie.split(","));
+		char c = '|';
+		List<String> filtered = new ArrayList<>();
+		
+		String patternString = "\\b(" + StringUtils.join(tokens, c) + ")\\b";
+		Pattern pattern = Pattern.compile(patternString);
+
+		for (String s : categories) {
+			Matcher matcher = pattern.matcher(s);
+			if(matcher.find()) {
+				filtered.add(s);
+			}
+		}
+		filtered.add(String.valueOf(categories.size()));
+		return filtered;
+	}
+	
+	public List<String> getTopCategories(int number) {
+		Query query = new Query();
+		query.fields().include("categories").exclude("_id");
+		List<Business> list = template.find(query, Business.class);
+		HashMap<String, Integer> categories = new HashMap<>();
+
+		for (Business b : list) {
+			for (String s : b.getCategories()) {
+				if (!categories.containsKey(s)) {
+					categories.put(s,1);
+				} else {
+					categories.put(s, categories.get(s)+1);
+				}
+			}
+		}
+		
+		String s;
+		List<String> finalCategories = new ArrayList<>();
+		for(int i=0; number > i; i++) {
+			//s=Collections.max(categories);
+			s=Collections.max(categories.entrySet(), Comparator.comparingInt(Map.Entry::getValue)).getKey();
+			finalCategories.add(s);
+			finalCategories.add(String.valueOf(categories.get(s)));
+			categories.remove(s);
+		}
+		return finalCategories;
+	}
+
 	public List<LocalDate> getAllDates() {
 		Query bQuery = new Query();
 		bQuery.fields().include("checkins").exclude("_id");
@@ -288,15 +356,15 @@ public class BusinessService {
 		// DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate l;
 
-		List<LocalDate> categories = new ArrayList<>();
+		List<LocalDate> dates = new ArrayList<>();
 
 		for (Business b : bList) {
 			if (b.getCheckins() != null) {
 				for (LocalDateTime s : b.getCheckins()) {
 					l = s.toLocalDate();
 					// l.format(formatter);
-					if (!categories.contains(l)) {
-						categories.add(l);
+					if (!dates.contains(l)) {
+						dates.add(l);
 					}
 				}
 			}
@@ -305,8 +373,8 @@ public class BusinessService {
 		for (Review r : rList) {
 			if (r != null) {
 				l = r.getDate().toLocalDate();
-				if (!categories.contains(l)) {
-					categories.add(l);
+				if (!dates.contains(l)) {
+					dates.add(l);
 				}
 			}
 		}
@@ -314,13 +382,13 @@ public class BusinessService {
 		for (Tip t : tList) {
 			if (t != null) {
 				l = t.getDate().toLocalDate();
-				if (!categories.contains(l)) {
-					categories.add(l);
+				if (!dates.contains(l)) {
+					dates.add(l);
 				}
 			}
 		}
-		Collections.sort(categories);
-		return categories;
+		Collections.sort(dates);
+		return dates;
 	}
 
 	public List<Business> getFilteredBusinesses(String state, String city, String stars, String open, String review,
@@ -347,6 +415,7 @@ public class BusinessService {
 			filter.addCriteria(Criteria.where("reviewCount").gt(Integer.parseInt(review)));
 		}
 
+<<<<<<< Updated upstream
 		if (!categorie.equals("empty")) {
 			if (categorie.contains(",")) {
 				List<String> s = Arrays.asList(categorie.split(","));
@@ -356,6 +425,8 @@ public class BusinessService {
 			}
 		}
 
+=======
+>>>>>>> Stashed changes
 		return template.find(filter, Business.class);
 	}
 
