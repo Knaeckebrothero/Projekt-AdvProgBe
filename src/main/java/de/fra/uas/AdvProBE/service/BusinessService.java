@@ -3,6 +3,7 @@ package de.fra.uas.AdvProBE.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -35,13 +36,13 @@ public class BusinessService {
 		long tmp = Math.round(value);
 		return (double) tmp / factor;
 	}
-	
+
 	private Query simpleBusinessFormat() {
 		Query query = new Query();
 		query.fields().exclude("_id").include("name", "city", "stars", "reviewCount");
 		return query;
 	}
-	
+
 	private static Query businessFormat() {
 		Query query = new Query();
 		query.fields().exclude("_id").include("name", "city", "latitude", "longitude", "stars", "reviewCount",
@@ -322,9 +323,10 @@ public class BusinessService {
 		return categories;
 	}
 
-	public List<Business> getFilteredBusinesses(String state, String city, String stars, String open, String review, String categorie) {
+	public List<Business> getFilteredBusinesses(String state, String city, String stars, String open, String review,
+			String categorie) {
 		Query filter = businessFormat();
-		
+
 		if (!state.equals("empty")) {
 			filter.addCriteria(Criteria.where("state").is(state));
 		}
@@ -344,11 +346,16 @@ public class BusinessService {
 		if (!review.equals("empty")) {
 			filter.addCriteria(Criteria.where("reviewCount").gt(Integer.parseInt(review)));
 		}
-		
-		if(!categorie.equals("empty")) {
-			filter.addCriteria(Criteria.where("categories").is(categorie));
+
+		if (!categorie.equals("empty")) {
+			if (categorie.contains(",")) {
+				List<String> s = Arrays.asList(categorie.split(","));
+				filter.addCriteria(Criteria.where("categories").in(s));
+			} else {
+				filter.addCriteria(Criteria.where("categories").is(categorie));
+			}
 		}
-		
+
 		return template.find(filter, Business.class);
 	}
 
