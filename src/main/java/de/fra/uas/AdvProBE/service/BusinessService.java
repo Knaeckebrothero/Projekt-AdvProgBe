@@ -4,10 +4,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-<<<<<<< Updated upstream
-=======
+
 import java.util.Collection;
->>>>>>> Stashed changes
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -415,7 +414,7 @@ public class BusinessService {
 			filter.addCriteria(Criteria.where("reviewCount").gt(Integer.parseInt(review)));
 		}
 
-<<<<<<< Updated upstream
+
 		if (!categorie.equals("empty")) {
 			if (categorie.contains(",")) {
 				List<String> s = Arrays.asList(categorie.split(","));
@@ -425,8 +424,7 @@ public class BusinessService {
 			}
 		}
 
-=======
->>>>>>> Stashed changes
+
 		return template.find(filter, Business.class);
 	}
 

@@ -32,43 +32,43 @@ public class MapController {
 		return new ResponseEntity<List<Business>>(bService.getAllBusinesses(), HttpStatus.OK);
 	}
 
-	// Get´s a list with all the citynames
+	// Getï¿½s a list with all the citynames
 	@GetMapping("citys")
 	public ResponseEntity<List<String>> getAllCitys() {
 		return new ResponseEntity<List<String>>(bService.getAllCitys(), HttpStatus.OK);
 	}
 
-	// Get´s a list with all the citynames
+	// Getï¿½s a list with all the citynames
 	@GetMapping("states")
 	public ResponseEntity<List<String>> getAllStates() {
 		return new ResponseEntity<List<String>>(bService.getAllStates(), HttpStatus.OK);
 	}
 
-	// Get´s a list with all the businesses for a city
+	// Getï¿½s a list with all the businesses for a city
 	@GetMapping("businesses/{city}")
 	public ResponseEntity<List<String>> getAllBusinessesForCity(@PathVariable String city) {
 		return new ResponseEntity<List<String>>(bService.getAllBusinessesForACity(city), HttpStatus.OK);
 	}
 
-	// Get´s a list of all the categories
+	// Getï¿½s a list of all the categories
 	@GetMapping("categories")
 	public ResponseEntity<List<String>> getAllCategories() {
 		return new ResponseEntity<List<String>>(bService.getAllCategories(), HttpStatus.OK);
 	}
 
-	// Get´s a list of all the categories
+	// Getï¿½s a list of all the categories
 	@GetMapping("categories/filter/{categorie}")
 	public ResponseEntity<List<String>> getAdvancedCategories(@PathVariable String categorie) {
 		return new ResponseEntity<List<String>>(bService.getAdvancedCategories(categorie), HttpStatus.OK);
 	}
 
-	// Get´s a list of all the categories
+	// Getï¿½s a list of all the categories
 	@GetMapping("categories/top{number}")
 	public ResponseEntity<List<String>> getTopCategories(@PathVariable int number) {
 		return new ResponseEntity<List<String>>(bService.getTopCategories(number), HttpStatus.OK);
 	}
 
-	// Get´s a list of all the dates that exist in checkins or reviews
+	// Getï¿½s a list of all the dates that exist in checkins or reviews
 	@GetMapping("dates")
 	public ResponseEntity<List<LocalDate>> getAllDates() {
 		Query query = new Query();
@@ -78,20 +78,13 @@ public class MapController {
 	}
 
 	// Get all Businesses filtered
-<<<<<<< Updated upstream
+
 	@GetMapping("businesses/filtered/basic/{state}/{city}/{stars}/{open}/{review}/{categorie}")
 	public ResponseEntity<List<Business>> getBasicFilteredBusinesses(@PathVariable String state, @PathVariable String city,
 			@PathVariable String stars, @PathVariable String open, @PathVariable String review, @PathVariable String categorie) {
 		return new ResponseEntity<List<Business>>(bService.getFilteredBusinesses(state, city, stars, open, review, categorie), HttpStatus.OK);
-=======
-	@GetMapping("businesses/filtered/basic/{state}/{city}/{stars}/{open}/{review}")
-	public ResponseEntity<List<Business>> getBasicFilteredBusinesses(@PathVariable String state,
-			@PathVariable String city, @PathVariable String stars, @PathVariable String open,
-			@PathVariable String review) {
-		return new ResponseEntity<List<Business>>(bService.getFilteredBusinesses(state, city, stars, open, review),
-				HttpStatus.OK);
->>>>>>> Stashed changes
 	}
+	
 
 	// Get all Businesses filtered
 	@GetMapping("businesses/filtered/advanced/{stateList}/{cityList}/{operatorStars}/{stars}/{open}/{operatorReview}/{review}")
