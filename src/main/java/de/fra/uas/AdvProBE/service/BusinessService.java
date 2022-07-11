@@ -322,7 +322,7 @@ public class BusinessService {
 		return categories;
 	}
 
-	public List<Business> getFilteredBusinesses(String state, String city, String stars, String open, String review) {
+	public List<Business> getFilteredBusinesses(String state, String city, String stars, String open, String review, String categorie) {
 		Query filter = businessFormat();
 		
 		if (!state.equals("empty")) {
@@ -343,6 +343,10 @@ public class BusinessService {
 
 		if (!review.equals("empty")) {
 			filter.addCriteria(Criteria.where("reviewCount").gt(Integer.parseInt(review)));
+		}
+		
+		if(!categorie.equals("empty")) {
+			filter.addCriteria(Criteria.where("categories").is(categorie));
 		}
 		
 		return template.find(filter, Business.class);
