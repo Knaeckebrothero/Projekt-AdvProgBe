@@ -12,7 +12,7 @@ import lombok.Data;
 //Java object representing database document
 @Data
 @Document
-public class preProcessed {
+public class PreProcessed {
 	// Auto generated id used by the Database
 	@Id
 	private String id;
@@ -28,7 +28,7 @@ public class preProcessed {
 	//private List<String> allReviewsForAllCitys;
 	private List<Business> topTenBusinessesWorldWide;
 
-	public preProcessed(LocalDate preprocessedAtDay) {
+	public PreProcessed(LocalDate preprocessedAtDay) {
 		super();
 		this.preprocessedAtDay = preprocessedAtDay;
 		/*this.timePreprocessingTookInMs = timePreprocessingTookInMs;
