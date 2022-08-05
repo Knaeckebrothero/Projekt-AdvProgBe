@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import de.fra.uas.AdvProBE.db.entitys.Business;
 import de.fra.uas.AdvProBE.db.entitys.Tip;
-import de.fra.uas.AdvProBE.preCalculate.preProcessed;
-import de.fra.uas.AdvProBE.preCalculate.preProcessedReviews;
+import de.fra.uas.AdvProBE.preCalculate.PreProcessed;
+import de.fra.uas.AdvProBE.preCalculate.PreProcessedReviews;
 import de.fra.uas.AdvProBE.service.BusinessService;
 import de.fra.uas.AdvProBE.service.ReviewService;
 import de.fra.uas.AdvProBE.service.TipService;
@@ -63,7 +63,7 @@ public class StatController {
 	public ResponseEntity<List<String>> getBusinessofAllCitys() {
 		Query query = new Query();
 		query.fields().include("allBusinessesPerCity").exclude("_id");
-		return new ResponseEntity<List<String>>(template.find(query, preProcessed.class).get(0).getAllBusinessesPerCity(), HttpStatus.OK);
+		return new ResponseEntity<List<String>>(template.find(query, PreProcessed.class).get(0).getAllBusinessesPerCity(), HttpStatus.OK);
 	}
 
 	// Get�s the average Rating for the given City
@@ -82,7 +82,7 @@ public class StatController {
 	public ResponseEntity<List<String>> getRatingOfAllCity() {
 		Query query = new Query();
 		query.fields().include("allAverageRatingsPerCity").exclude("_id");
-		return new ResponseEntity<List<String>>(template.find(query, preProcessed.class).get(0).getAllAverageRatingsPerCity(), HttpStatus.OK);
+		return new ResponseEntity<List<String>>(template.find(query, PreProcessed.class).get(0).getAllAverageRatingsPerCity(), HttpStatus.OK);
 	}
 
 	//Gets the sum of reivews written for a business in the given city
@@ -108,7 +108,7 @@ public class StatController {
 		Query query = new Query();
 		query.fields().include("allReviewsTimespan","counter").exclude("_id");
 		query.addCriteria(Criteria.where("preprocessedAtDay").is(LocalDate.now()).and("counter").is(counter));
-		return new ResponseEntity<List<LocalDateTime>>(template.find(query, preProcessedReviews.class).get(0).getAllReviewsTimespan(), HttpStatus.OK);
+		return new ResponseEntity<List<LocalDateTime>>(template.find(query, PreProcessedReviews.class).get(0).getAllReviewsTimespan(), HttpStatus.OK);
 	}
 
 	// Gets the top 10 Businesses
@@ -128,7 +128,7 @@ public class StatController {
 	public ResponseEntity<List<Business>> getTopRestaurantTotal() {
 		Query query = new Query();
 		query.fields().include("topTenBusinessesWorldWide").exclude("_id");
-			return new ResponseEntity<List<Business>>(template.find(query, preProcessed.class).get(0).getTopTenBusinessesWorldWide(), HttpStatus.OK);
+			return new ResponseEntity<List<Business>>(template.find(query, PreProcessed.class).get(0).getTopTenBusinessesWorldWide(), HttpStatus.OK);
 	}
 
 	// Get�s all the checkins of a Business

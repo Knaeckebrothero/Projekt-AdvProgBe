@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.fra.uas.AdvProBE.db.entitys.Business;
-import de.fra.uas.AdvProBE.preCalculate.preProcessed;
+import de.fra.uas.AdvProBE.preCalculate.PreProcessed;
 import de.fra.uas.AdvProBE.service.BusinessService;
 import lombok.AllArgsConstructor;
 
@@ -73,7 +73,7 @@ public class MapController {
 	public ResponseEntity<List<LocalDate>> getAllDates() {
 		Query query = new Query();
 		query.fields().include("allDates").exclude("_id");
-		return new ResponseEntity<List<LocalDate>>(template.find(query, preProcessed.class).get(0).getAllDates(),
+		return new ResponseEntity<List<LocalDate>>(template.find(query, PreProcessed.class).get(0).getAllDates(),
 				HttpStatus.OK);
 	}
 

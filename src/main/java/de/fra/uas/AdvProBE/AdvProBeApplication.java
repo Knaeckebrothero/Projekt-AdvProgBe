@@ -19,8 +19,8 @@ import org.springframework.web.filter.CorsFilter;
 import org.springframework.data.mongodb.core.query.Update;
 
 import de.fra.uas.AdvProBE.db.entitys.Business;
-import de.fra.uas.AdvProBE.preCalculate.preProcessed;
-import de.fra.uas.AdvProBE.preCalculate.preProcessedReviews;
+import de.fra.uas.AdvProBE.preCalculate.PreProcessed;
+import de.fra.uas.AdvProBE.preCalculate.PreProcessedReviews;
 import de.fra.uas.AdvProBE.service.BusinessService;
 import de.fra.uas.AdvProBE.service.ReviewService;
 
@@ -48,14 +48,14 @@ public class AdvProBeApplication {
 
 			Query query = new Query();
 			query.addCriteria(Criteria.where("preprocessedAtDay").is(LocalDate.now()));
-			preProcessed pre = new preProcessed(LocalDate.now());
+			PreProcessed pre = new PreProcessed(LocalDate.now());
 			template.insert(pre);
 
 			try {
 				List<LocalDate> allDates = bService.getAllDates();
 				Update uAllDates = new Update();
 				uAllDates.set("allDates", allDates);
-				template.updateFirst(query, uAllDates, preProcessed.class);
+				template.updateFirst(query, uAllDates, PreProcessed.class);
 			} catch (Exception E) {
 				System.out.println("allDates");
 			}
@@ -64,7 +64,7 @@ public class AdvProBeApplication {
 				List<String> allBusinessesPerCity = bService.getBusinessofAllCitys();
 				Update uAllBusinessesPerCity = new Update();
 				uAllBusinessesPerCity.set("allBusinessesPerCity", allBusinessesPerCity);
-				template.updateFirst(query, uAllBusinessesPerCity, preProcessed.class);
+				template.updateFirst(query, uAllBusinessesPerCity, PreProcessed.class);
 			} catch (Exception E) {
 				System.out.println("allBusinessesPerCity");
 			}
@@ -73,7 +73,7 @@ public class AdvProBeApplication {
 				List<String> allAverageRatingsPerCity = bService.getRatingOfAllCitys();
 				Update uAllAverageRatingsPerCity = new Update();
 				uAllAverageRatingsPerCity.set("allAverageRatingsPerCity", allAverageRatingsPerCity);
-				template.updateFirst(query, uAllAverageRatingsPerCity, preProcessed.class);
+				template.updateFirst(query, uAllAverageRatingsPerCity, PreProcessed.class);
 			} catch (Exception E) {
 				System.out.println("allAverageRatingsPerCity");
 			}
@@ -83,7 +83,7 @@ public class AdvProBeApplication {
 				List<List<LocalDateTime>> listList = chopped(allReviewsTimespan, 50000);
 
 				for (int i = 0; listList.size() > i; i++) {
-					template.insert(new preProcessedReviews(LocalDate.now(), i, listList.get(i)));
+					template.insert(new PreProcessedReviews(LocalDate.now(), i, listList.get(i)));
 				}
 			} catch (Exception E) {
 				System.out.println("allReviewsTimespan");
@@ -93,20 +93,20 @@ public class AdvProBeApplication {
 				List<Business> topTenBusinessesWorldWide = bService.getTopTenRestaurantTotal();
 				Update uTopTenBusinessesWorldWide = new Update();
 				uTopTenBusinessesWorldWide.set("topTenBusinessesWorldWide", topTenBusinessesWorldWide);
-				template.updateFirst(query, uTopTenBusinessesWorldWide, preProcessed.class);
+				template.updateFirst(query, uTopTenBusinessesWorldWide, PreProcessed.class);
 			} catch (Exception E) {
 				System.out.println("topTenBusinessesWorldWide");
 			}
 
 			Update uTimePreprocessingTookInMs = new Update();
 			uTimePreprocessingTookInMs.set("timePreprocessingTookInMs", System.nanoTime() - startTime);
-			template.updateFirst(query, uTimePreprocessingTookInMs, preProcessed.class);
+			template.updateFirst(query, uTimePreprocessingTookInMs, PreProcessed.class);
 
 			Query rQuery = new Query();
 			rQuery.addCriteria(Criteria.where("preprocessedAtDay").ne(LocalDate.now()));
 			
-			template.remove(rQuery, preProcessed.class);
-			template.remove(rQuery, preProcessedReviews.class);
+			template.remove(rQuery, PreProcessed.class);
+			template.remove(rQuery, PreProcessedReviews.class);
 			long elapsedTime = System.nanoTime() - startTime;
 			System.out.println("Total execution time was in Java in millis: " + elapsedTime / 1000000);
 		};

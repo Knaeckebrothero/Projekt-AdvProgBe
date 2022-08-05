@@ -12,7 +12,7 @@ import lombok.Data;
 //Java object representing database document
 @Data
 @Document
-public class preProcessedReviews {
+public class PreProcessedReviews {
 	// Auto generated id used by the Database
 	@Id
 	private String id;
@@ -24,7 +24,7 @@ public class preProcessedReviews {
 	//Values
 	private List<LocalDateTime> allReviewsTimespan;
 
-	public preProcessedReviews(LocalDate preprocessedAtDay, int counter,
+	public PreProcessedReviews(LocalDate preprocessedAtDay, int counter,
 			List<LocalDateTime> allReviewsTimespan) {
 		super();
 		this.preprocessedAtDay = preprocessedAtDay;
